@@ -6,7 +6,7 @@ RUN mkdir -p /home/apps
 RUN cd /home/apps && \
     apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y vim git wget make build-essential cmake \
-    protobuf-compiler pkg-config libprotobuf-dev libjansson-dev libhts-dev libncurses-dev libbz2-dev liblzma-dev
+    protobuf-compiler pkg-config libprotobuf-dev libjansson-dev libhts-dev libncurses-dev libbz2-dev liblzma-dev zlib1g-dev autoconf
 
 
 RUN wget https://github.com/samtools/samtools/releases/download/1.15.1/samtools-1.15.1.tar.bz2 && tar xvjf samtools-1.15.1.tar.bz2 && \
@@ -28,7 +28,7 @@ RUN cd /home/apps && \
     mkdir build && \
     cd build && \
     cmake .. && \
-    make -j 8 
+    make  
     
 ENV PATH="/home/apps/GFAse/build:${PATH}"
 ENV PATH="/home/apps/GFAse/data:${PATH}"
