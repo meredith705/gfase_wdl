@@ -48,7 +48,7 @@ task runBwaAlignment {
     }
 
     output {
-        File out_hic_to_asm_bam = ~{assembly_fasta}_coverage.bam
+        File out_hic_to_asm_bam = "*coverage.bam"
 
     }
 }
