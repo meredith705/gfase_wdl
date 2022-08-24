@@ -19,10 +19,13 @@ RUN wget https://github.com/samtools/samtools/releases/download/1.15.1/samtools-
     ./configure && \
     make 
 
+WORKDIR /home/apps
+RUN wget https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.2.1/bwa-mem2-2.2.1_x64-linux.tar.bz2 && \ 
+    tar -jxf bwa-mem2-2.2.1_x64-linux.tar.bz2
 
-RUN cd /home/apps && \
-    curl -L https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.0pre2/bwa-mem2-2.0pre2_x64-linux.tar.bz2 \
-    | tar jxf - 
+#RUN cd /home/apps && \
+#    curl -L https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.0pre2/bwa-mem2-2.0pre2_x64-linux.tar.bz2 \
+#    | tar jxf - 
 
 #RUN wget https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.2.1/bwa-mem2-2.2.1_x64-linux.tar.bz2 && tar -jxf bwa-mem2-2.2.1_x64-linux.tar.bz2 \
 #    && mv bwa-mem2-2.2.1_x64-linux /usr/local/bin/
@@ -43,7 +46,7 @@ ENV PATH="/home/apps/GFAse/build:${PATH}"
 ENV PATH="/home/apps/GFAse/data:${PATH}"
 ENV PATH="/home/apps/GFAse/scripts:${PATH}"
 ENV PATH="/home/apps/samtools-1.15.1:${PATH}"
-ENV PATH="/home/apps/bwa-mem2-2.0pre2_x64-linux:${PATH}"
+ENV PATH="/home/apps/bwa-mem2-2.2.1_x64-linux:${PATH}"
 
 
 
