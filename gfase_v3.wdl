@@ -5,7 +5,7 @@ version 1.0
 ## mmmeredi@ucsc.ed
 ## 2022-08-01
 
-import "bwa_mem2.wdl" as bwamem_t
+import "bwa_mem2.v2.wdl" as bwamem_t
 
 workflow runGFAsePhase {
 	
