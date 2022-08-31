@@ -1,5 +1,5 @@
 # gfase_wdl
-wdl workflow to run gfase
+wdl workflow to run GFAse trio phasing or linked read phasing. 
 
 Some small files to test the WDL with:
 ```
