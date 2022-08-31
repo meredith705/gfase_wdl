@@ -2,7 +2,7 @@ version 1.0
 
 ## bwa-mem2 aligner WDL for gfase proximity linked read alignment 
 ## Maintainer: Melissa Meredith 
-## mmmeredi@ucsc.ed
+## mmmeredi@ucsc.edu
 ## 2022-08-01
 
 
@@ -10,22 +10,27 @@ workflow runBwaAlignment {
     
     input {
         File assembly_gfa_file
-        File? linked_read_fasta_1_file
-        File? linked_read_fasta_2_file 
+        Array[File?] linkedRead1Files
+        Array[File?] linkedRead2Files
         String dockerImage = "meredith705/gfase:latest" 
     }
 
     # run alignment
-    call bwaAlignment {
-        input:
-            assembly_gfa=assembly_gfa_file,
-            linked_read_fasta_1=linked_read_fasta_1_file,
-            linked_read_fasta_2=linked_read_fasta_2_file,
-            dockerImage=dockerImage
+    # zip read1 and read2 into pairs to align together
+    Array[Pair[File?,File?]] linked_read_pair_file_list = zip(linkedRead1Files,linkedRead2Files)
+    scatter (file_pairs in linked_read_pair_file_list){
+        call bwaAlignment {
+            input:
+                assembly_gfa=assembly_gfa_file,
+                linked_read_fasta_1=file_pairs.left,
+                linked_read_fasta_2=file_pairs.right,
+                dockerImage=dockerImage
+        }
+        
     }
 
     output {
-        File? outputBam = bwaAlignment.outBam
+        Array[File?] outputBams = bwaAlignment.outBam
 
     }
 
@@ -64,24 +69,28 @@ task bwaAlignment {
             # turn the gfa into a fasta for alignment
             python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa}
 
-            # isolate the new name of the assembly fasta
-            asm_fa=$(echo ~{assembly_gfa} | cut -f 1 -d ".") 
-            asm_fa=$asm_fa.fasta
+            # store the name of the assembly fasta
+            ASM_FA=$(echo ~{assembly_gfa} | cut -f 1 -d ".") 
+            ASM_FA=$ASM_FA.fasta
+            
+            # store the assembly name
+            ASM_FA_NAME=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' )
+            # store read file name
+            READ1_NAME=$(echo ~{linked_read_fasta_1} | awk -F'/' '{print $(NF)}') 
 
             # index, align, and sort reads to assembly
-            bwa-mem2 index $asm_fa && \
-            bwa-mem2 mem -5 -S -P $asm_fa \
+            bwa-mem2 index $ASM_FA && \
+            bwa-mem2 mem -5 -S -P $ASM_FA \
             ~{linked_read_fasta_1} \
             ~{linked_read_fasta_2} \
-            | samtools sort -n -@ 24 - -o "assembly.gfa.fa.coverage.bam" \
+            | samtools sort -n -@ 24 - -o ${ASM_FA_NAME}.${READ1_NAME}.bam 
 
         fi
 
     >>>
 
     output {
-        File? outBam = "assembly.gfa.fa.coverage.bam"
-
+        File? outBam = glob("*bam")[0]
 
     }
 

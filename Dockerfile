@@ -9,7 +9,7 @@ RUN cd /home/apps && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y vim git wget make build-essential cmake \
     python3.8 python3.8-dev python3-pip \
     protobuf-compiler pkg-config libprotobuf-dev libjansson-dev libhts-dev libncurses-dev \
-    libbz2-dev liblzma-dev zlib1g-dev autoconf libcurl4-openssl-dev curl
+    libbz2-dev liblzma-dev zlib1g-dev autoconf libcurl4-openssl-dev curl libomp-dev
 
 WORKDIR /home/apps
 RUN wget https://github.com/samtools/samtools/releases/download/1.15.1/samtools-1.15.1.tar.bz2 && \
@@ -23,20 +23,13 @@ WORKDIR /home/apps
 RUN wget https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.2.1/bwa-mem2-2.2.1_x64-linux.tar.bz2 && \ 
     tar -jxf bwa-mem2-2.2.1_x64-linux.tar.bz2
 
-#RUN cd /home/apps && \
-#    curl -L https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.0pre2/bwa-mem2-2.0pre2_x64-linux.tar.bz2 \
-#    | tar jxf - 
-
-#RUN wget https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.2.1/bwa-mem2-2.2.1_x64-linux.tar.bz2 && tar -jxf bwa-mem2-2.2.1_x64-linux.tar.bz2 \
-#    && mv bwa-mem2-2.2.1_x64-linux /usr/local/bin/
-
 
 #ADD https://api.github.com/repos/rlorigro/GFAse/git/refs/heads/wdl_debug version.json
 
 RUN cd /home/apps && \
     git clone https://github.com/rlorigro/GFAse.git && \
     cd GFAse && \
-    git checkout 954038b6b47823afa209dbbafd20ffb8247e91e4 && \
+    #git checkout 954038b6b47823afa209dbbafd20ffb8247e91e4 && \
     mkdir build && \
     cd build && \
     cmake .. && \
