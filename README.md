@@ -14,4 +14,4 @@ https://rlorigro-public-files.s3.us-west-1.amazonaws.com/gfase/paolo_ul_guppy6_r
 
 ```
 
-Different GFAse modes are run depending on input files. Output files also depend on wether kmer fasta files or linked read fastq files are given as input
+Different GFAse modes are run depending on input files. Output files also depend on whether kmer fasta files or linked read fastq files are given as input
