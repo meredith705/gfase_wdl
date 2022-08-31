@@ -1,5 +1,0 @@
-{
-  "runGFAsePhase.assemblyGFA": "test_data/run14_uul_test_subset.gfa",
-  "runGFAsePhase.linked_read_fasta_1_File": "test_data/small_test.1.fastq", 
-  "runGFAsePhase.linked_read_fasta_2_File": "test_data/small_test.2.fastq"
-}
