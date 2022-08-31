@@ -10,7 +10,7 @@ import "bwa_mem2.wdl" as bwamem_t
 workflow runGFAsePhase {
 	
     input {
-        File assemblyGFA                            # Input assembly GFA file from assembler
+        File assemblyGFA                            # Input assembly GFA file from assembler (eg. Shasta)
         #### trio data input ########
         File? patKmerFile                           # Input Fasta file of paternal kmers ( eg. made with KMC3 )
         File? matKmerFile                           # Input Fasta file of maternal kmers ( eg. made with KMC3 )
