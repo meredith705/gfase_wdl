@@ -1,0 +1,16 @@
+version: 1.2
+workflows:
+  - name: gfaseWorkflow
+    subclass: WDL
+    primaryDescriptorPath: gfase.wdl
+    authors:
+      - name: Melissa Meredith
+        email: mmmeredi@ucsc.edu
+        orcid: 0000-0001-5736-3193
+  - name: bwa-mem2Workflow
+    subclass: WDL
+    primaryDescriptorPath: bwa-mem2.wdl
+    authors:
+      - name: Melissa Meredith
+        email: mmmeredi@ucsc.edu
+        orcid: 0000-0001-5736-3193
