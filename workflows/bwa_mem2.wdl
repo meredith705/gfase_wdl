@@ -70,7 +70,7 @@ task bwaAlignment {
             python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa}
 
             # store the name of the assembly fasta
-            ASM_FA=$(echo ~{assembly_gfa} | cut -f 1 -d ".") 
+            ASM_FA=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' - | cut -f 1 -d ".") 
             ASM_FA=$ASM_FA.fasta
             
             # store the assembly name
