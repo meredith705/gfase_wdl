@@ -43,9 +43,9 @@ task bwaAlignment {
         File? linked_read_fasta_1
 		File? linked_read_fasta_2
 		# runtime configurations
-		Int memSizeGB = 128
-		Int threadCount = 46
-		Int diskSizeGB = 128
+		Int memSizeGB = 185
+		Int threadCount = 48
+        Int disk_size = 4 * round(size(linked_read_fasta_1, 'G') + size(linked_read_fasta_2, 'G')) + 20
 		String dockerImage = "meredith705/gfase:latest"
     }
 
@@ -96,6 +96,7 @@ task bwaAlignment {
 
     runtime {
         docker: dockerImage
+        disks: "local-disk " + disk_size + " SSD"
         memory: memSizeGB + " GB"
         cpu: threadCount
     }
