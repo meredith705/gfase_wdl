@@ -39,14 +39,14 @@ workflow runBwaAlignment {
 task bwaAlignment {
 
     input {
-		File assembly_gfa
+        File assembly_gfa
         File? linked_read_fasta_1
-		File? linked_read_fasta_2
-		# runtime configurations
-		Int memSizeGB = 185
-		Int threadCount = 48
+        File? linked_read_fasta_2
+        # runtime configurations
+        Int memSizeGB = 185
+        Int threadCount = 48
         Int disk_size = 4 * round(size(linked_read_fasta_1, 'G') + size(linked_read_fasta_2, 'G')) + 20
-		String dockerImage = "meredith705/gfase:latest"
+        String dockerImage = "meredith705/gfase:latest"
     }
 
 
