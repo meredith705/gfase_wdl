@@ -49,7 +49,7 @@ task bwaAlignment {
         String dockerImage = "meredith705/gfase:latest"
     }
 
-
+    String assembly_prefix = basename(assembly_gfa, ".gfa")
     command <<<
         # Set the exit code of a pipeline to that of the rightmost command
         # to exit with a non-zero status, or zero if all commands of the pipeline exit
@@ -70,17 +70,18 @@ task bwaAlignment {
             python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa}
 
             # store the name of the assembly fasta
-            ASM_FA=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' - | cut -f 1 -d ".") 
-            ASM_FA=$ASM_FA.fasta
+            #ASM_FA=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' - | cut -f 1 -d ".") 
+            #ASM_FA=basename(~{assembly_gfa},'.gfa')
+            #ASM_FA=$ASM_FA.fasta
             
             # store the assembly name
-            ASM_FA_NAME=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' )
+            #ASM_FA_NAME=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' )
             # store read file name
             READ1_NAME=$(echo ~{linked_read_fasta_1} | awk -F'/' '{print $(NF)}') 
 
             # index, align, and sort reads to assembly
-            bwa-mem2 index $ASM_FA && \
-            bwa-mem2 mem -5 -S -P $ASM_FA \
+            bwa-mem2 index ~{assembly_prefix}.fasta && \
+            bwa-mem2 mem -5 -S -P ~{assembly_prefix}.fasta \
             ~{linked_read_fasta_1} \
             ~{linked_read_fasta_2} \
             | samtools sort -n -@ 24 - -o ${ASM_FA_NAME}.${READ1_NAME}.bam 
