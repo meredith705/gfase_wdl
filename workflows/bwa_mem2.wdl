@@ -67,7 +67,7 @@ task bwaAlignment {
 
         else 
             # turn the gfa into a fasta for alignment
-            python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa}
+            python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa} -o assembly.fasta
 
             # store the name of the assembly fasta
             #ASM_FA=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' - | cut -f 1 -d ".") 
@@ -75,13 +75,13 @@ task bwaAlignment {
             #ASM_FA=$ASM_FA.fasta
             
             # store the assembly name
-            #ASM_FA_NAME=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' )
+            ASM_FA_NAME=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' | cut -f 1 -d "." )
             # store read file name
             READ1_NAME=$(echo ~{linked_read_fasta_1} | awk -F'/' '{print $(NF)}') 
 
             # index, align, and sort reads to assembly
-            bwa-mem2 index ~{assembly_prefix}.fasta && \
-            bwa-mem2 mem -5 -S -P ~{assembly_prefix}.fasta \
+            bwa-mem2 index assembly.fasta && \
+            bwa-mem2 mem -5 -S -P assembly.fasta \
             ~{linked_read_fasta_1} \
             ~{linked_read_fasta_2} \
             | samtools sort -n -@ 24 - -o ${ASM_FA_NAME}.${READ1_NAME}.bam 
