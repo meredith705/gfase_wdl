@@ -83,7 +83,7 @@ task bwaAlignment {
 
             # index, align, and sort reads to assembly
             bwa-mem2 index assembly.fasta && \
-            bwa-mem2 mem -5 -S -P assembly.fasta \
+            bwa-mem2 mem -t ~{threadCount} -5 -S -P assembly.fasta \
             ~{linked_read_fasta_1} \
             ~{linked_read_fasta_2} \
             | samtools sort -n -@ 24 - -o ${ASM_FA_NAME}.${READ1_NAME}.bam 
