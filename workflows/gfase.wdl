@@ -93,8 +93,8 @@ task combineBams {
         Array[File] bamFiles
         # runtime configurations
         Int memSizeGB=128
-        Int threadCount=16
-        Int diskSizeGB=256
+        Int threadCount=48
+        Int disk_size = 2 * round(size(bamFiles, 'G') 
         String dockerImage="meredith705/gfase:latest"
     }
     command <<<
@@ -109,12 +109,13 @@ task combineBams {
         # to turn off echo do 'set +o xtrace'
         set -o xtrace
 
-        samtools merge -n -@ 24 ~{sep=" " bamFiles} -o "allBams.bam"
+        samtools merge -n -@ ~{threadCount} ~{sep=" " bamFiles} -o "allBams.bam"
 
     >>>
 
     runtime {
         docker: dockerImage
+        disks: "local-disk " + disk_size + " SSD"
         memory: memSizeGB + " GB"
         cpu: threadCount
     }
@@ -134,8 +135,8 @@ task gfaseTrioPhase {
 
         # runtime configurations
         Int memSizeGB = 128
-        Int threadCount = 46
-        Int diskSizeGB = 64
+        Int threadCount = 16
+        Int disk_size = 1.5 * round(size(assemblyGfa, 'G') + round(size(patKmerFa, 'G') + round(size(matKmerFa, 'G')
         String dockerImage = "meredith705/gfase:latest"
     }
     command <<<
@@ -162,6 +163,7 @@ task gfaseTrioPhase {
 
     runtime {
         docker: dockerImage
+        disks: "local-disk " + disk_size + " SSD"
         memory: memSizeGB + " GB"
         cpu: threadCount
     }
@@ -188,7 +190,7 @@ task gfaseLinkedRead {
         # runtime configurations
         Int memSizeGB = 128
         Int threadCount = 46
-        Int diskSizeGB = 64
+        Int disk_size = 2 * round(size(assemblyGfa, 'G') + round(size(alignmentBam, 'G') 
         String dockerImage = "meredith705/gfase:latest"
     }
     command <<<
@@ -218,6 +220,7 @@ task gfaseLinkedRead {
 
     runtime {
         docker: dockerImage
+        disks: "local-disk " + disk_size + " SSD"
         memory: memSizeGB + " GB"
         cpu: threadCount
     }
