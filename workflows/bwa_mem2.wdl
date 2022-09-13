@@ -67,9 +67,9 @@ task bwaAlignment {
 
         else 
             # turn the gfa into a fasta for alignment
-            python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa} -o assembly.fasta
+            #python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa} -o assembly.fasta
 
-            #awk '/^S/{print ">"$2"\n"$3}' ~{assembly_gfa} | fold > assembly.fasta
+            awk '/^S/{print ">"$2"\n"$3}' ~{assembly_gfa} | fold > assembly.fasta
 
             # store the name of the assembly fasta
             #ASM_FA=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' - | cut -f 1 -d ".") 
