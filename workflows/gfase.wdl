@@ -94,7 +94,7 @@ task combineBams {
         # runtime configurations
         Int memSizeGB=128
         Int threadCount=48
-        Int disk_size = 2 * round(size(bamFiles, 'G') 
+        Int disk_size = 2 * round(size(bamFiles, 'G')) 
         String dockerImage="meredith705/gfase:latest"
     }
     command <<<
@@ -136,7 +136,7 @@ task gfaseTrioPhase {
         # runtime configurations
         Int memSizeGB = 128
         Int threadCount = 16
-        Int disk_size = 1.5 * round(size(assemblyGfa, 'G') + round(size(patKmerFa, 'G') + round(size(matKmerFa, 'G')
+        Int disk_size = 1.5 * round(size(assemblyGfa, 'G')) + round(size(patKmerFa, 'G')) + round(size(matKmerFa, 'G'))
         String dockerImage = "meredith705/gfase:latest"
     }
     command <<<
@@ -190,7 +190,7 @@ task gfaseLinkedRead {
         # runtime configurations
         Int memSizeGB = 128
         Int threadCount = 46
-        Int disk_size = 2 * round(size(assemblyGfa, 'G') + round(size(alignmentBam, 'G') 
+        Int disk_size = 2 * round(size(assemblyGfa, 'G')) + round(size(alignmentBam, 'G'))
         String dockerImage = "meredith705/gfase:latest"
     }
     command <<<
