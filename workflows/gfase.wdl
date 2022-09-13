@@ -42,7 +42,7 @@ workflow runGFAsePhase {
         Array[File] all_paired_alignment_bams = select_all(bwamem.outBam)
 
         # combine the bam's into one bam sorted by read name
-        call combineBams as cb {
+        call combineBams {
             input:
                 bamFiles =  all_paired_alignment_bams
         }
@@ -51,7 +51,7 @@ workflow runGFAsePhase {
         call gfaseLinkedRead {
             input:
                 assemblyGfa         = assemblyGFA,
-                alignmentBam        = cb.outputAllbamFile,
+                alignmentBam        = combineBams.outputAllbamFile,
                 dockerImage         = dockerImage
         }
 
@@ -93,8 +93,8 @@ task combineBams {
         Array[File] bamFiles
         # runtime configurations
         Int memSizeGB=128
-        Int threadCount=48
-        Int disk_size = 2 * round(size(bamFiles, 'G')) 
+        Int threadCount=64
+        Int disk_size = 4 * round(size(bamFiles, 'G')) + 100
         String dockerImage="meredith705/gfase:latest"
     }
     command <<<
@@ -116,7 +116,6 @@ task combineBams {
     runtime {
         docker: dockerImage
         disks: "local-disk " + disk_size + " SSD"
-        memory: memSizeGB + " GB"
         cpu: threadCount
     }
 
@@ -136,7 +135,7 @@ task gfaseTrioPhase {
         # runtime configurations
         Int memSizeGB = 128
         Int threadCount = 16
-        Int disk_size = 1.5 * round(size(assemblyGfa, 'G')) + round(size(patKmerFa, 'G')) + round(size(matKmerFa, 'G'))
+        Int disk_size = 4 * round(size(assemblyGfa, 'G')) + round(size(patKmerFa, 'G')) + round(size(matKmerFa, 'G')) + 100
         String dockerImage = "meredith705/gfase:latest"
     }
     command <<<
@@ -190,7 +189,7 @@ task gfaseLinkedRead {
         # runtime configurations
         Int memSizeGB = 128
         Int threadCount = 46
-        Int disk_size = 2 * round(size(assemblyGfa, 'G')) + round(size(alignmentBam, 'G'))
+        Int disk_size = 4 * round(size(assemblyGfa, 'G')) + round(size(alignmentBam, 'G')) + 100
         String dockerImage = "meredith705/gfase:latest"
     }
     command <<<
