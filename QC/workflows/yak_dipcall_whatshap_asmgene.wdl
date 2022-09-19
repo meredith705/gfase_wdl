@@ -1,9 +1,9 @@
 version 1.0
 
-import "whatshap.wdl" as whatshap_t
-import "yak.wdl" as yak_t
+import "../tasks/whatshap.wdl" as whatshap_t
+import "../tasks/yak.wdl" as yak_t
 import "https://raw.githubusercontent.com/human-pangenomics/hpp_production_workflows/f8b09cb7b02729e57b5960665358e081ecfa6af6/QC/wdl/tasks/dipcall.wdl" as dipcall_t
-import "asmgene.wdl" as asmgene_t
+import "../tasks/asmgene.wdl" as asmgene_t
 
 workflow yakDipcallWhatshap {
 
