@@ -1,11 +1,11 @@
 version 1.0
 
-## GFAse WDL for gfa phasing, using trio or linked reads 
+## gfase wdl 
 ## Maintainer: Melissa Meredith 
 ## mmmeredi@ucsc.edu
 ## 2022-08-01
 
-import "bwa_mem2.wdl" as bwamem_t
+import "../tasks/bwa_mem2.wdl" as bwamem_t
 
 workflow runGFAsePhase {
 	
@@ -211,6 +211,7 @@ task gfaseLinkedRead {
         -g ~{assemblyGfa} \
         -o gfase \
         -m ~{m} \
+        -t ~{t} \
         -p ~{p}
                 
         echo done >> log.txt
