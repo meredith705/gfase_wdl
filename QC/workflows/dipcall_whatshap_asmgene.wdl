@@ -4,7 +4,7 @@ import "../tasks/whatshap.wdl" as whatshap_t
 import "https://raw.githubusercontent.com/human-pangenomics/hpp_production_workflows/f8b09cb7b02729e57b5960665358e081ecfa6af6/QC/wdl/tasks/dipcall.wdl" as dipcall_t
 import "../tasks/asmgene.wdl" as asmgene_t
 
-workflow yakDipcallWhatshap {
+workflow dipcallWhatshapAsmgene {
 
     input {
         File assemblyPat
@@ -49,9 +49,10 @@ workflow yakDipcallWhatshap {
             referenceFasta=asmgeneReferenceFasta
     }
 
-
     output {
-        File whatshapTarball = whatshapAnalysis.outputTarball
+        File whatshapTarball = coalesceResults.outputTarball
+        File whatshapReport = coalesceResults.fullOutput
+        File asmgeneStats = asmgene.geneStats
 		File dipcallTarball = dipcall.outputTarball
 		File dipcallVCF = addPhaseSetToVCF.phasettedVcf
 		File dipcallBED = dipcall.outputBED
