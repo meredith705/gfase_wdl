@@ -10,14 +10,14 @@ workflow runBwaAlignment {
     
     input {
         File assembly_gfa_file
-        Array[File?] linkedRead1Files
-        Array[File?] linkedRead2Files
+        Array[File] linkedRead1Files
+        Array[File] linkedRead2Files
         String dockerImage = "meredith705/gfase:latest" 
     }
 
     # run alignment
     # zip read1 and read2 into pairs to align together
-    Array[Pair[File?,File?]] linked_read_pair_file_list = zip(linkedRead1Files,linkedRead2Files)
+    Array[Pair[File,File]] linked_read_pair_file_list = zip(linkedRead1Files,linkedRead2Files)
     scatter (file_pairs in linked_read_pair_file_list){
         call bwaAlignment {
             input:
@@ -30,7 +30,7 @@ workflow runBwaAlignment {
     }
 
     output {
-        Array[File?] outputBams = bwaAlignment.outBam
+        Array[File] outputBams = bwaAlignment.outBam
 
     }
 
@@ -40,16 +40,20 @@ task bwaAlignment {
 
     input {
         File assembly_gfa
-        File? linked_read_fasta_1
-        File? linked_read_fasta_2
+        File linked_read_fasta_1
+        File linked_read_fasta_2
+        Int min_mapq = 1
         # runtime configurations
         Int memSizeGB = 185
         Int threadCount = 64
-        Int disk_size = 4 * round(size(linked_read_fasta_1, 'G') + size(linked_read_fasta_2, 'G')) + 200
+        Int disk_size = 15 * round(size(linked_read_fasta_1, 'G') + size(linked_read_fasta_2, 'G')) + 50
         String dockerImage = "meredith705/gfase:latest"
     }
 
-    String assembly_prefix = basename(assembly_gfa, ".gfa")
+    Int threadBwa = if threadCount < 16 then ceil(threadCount/2) else threadCount - 8
+    Int threadSort = if threadCount < 16 then floor(threadCount/2) else 8
+    String asm_name = sub(sub(basename(assembly_gfa), '\\.gz$', ''), '\\.gfa$', '')
+    String read_name = sub(sub(sub(basename(linked_read_fasta_1), '\\.gz$', ''), '\\.fq$', ''), '\\.fastq$', '')
     command <<<
         # Set the exit code of a pipeline to that of the rightmost command
         # to exit with a non-zero status, or zero if all commands of the pipeline exit
@@ -62,39 +66,19 @@ task bwaAlignment {
         # to turn off echo do 'set +o xtrace'
         set -o xtrace
 
-        if [[ ! -f "~{linked_read_fasta_1}" ]] ; then
-            echo "" 
+        # turn the gfa into a fasta for alignment
+        python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa} -o ./assembly.fasta
 
-        else 
-            # turn the gfa into a fasta for alignment
-            #python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa} -o assembly.fasta
-
-            awk '/^S/{print ">"$2"\n"$3}' ~{assembly_gfa} | fold > assembly.fasta
-
-            # store the name of the assembly fasta
-            #ASM_FA=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' - | cut -f 1 -d ".") 
-            #ASM_FA=basename(~{assembly_gfa},'.gfa')
-            #ASM_FA=$ASM_FA.fasta
-            
-            # store the assembly name
-            ASM_FA_NAME=$(echo ~{assembly_gfa} | awk -F'/' '{print $(NF)}' | cut -f 1 -d "." )
-            # store read file name
-            READ1_NAME=$(echo ~{linked_read_fasta_1} | awk -F'/' '{print $(NF)}') 
-
-            # index, align, and sort reads to assembly
-            bwa-mem2 index assembly.fasta && \
-            bwa-mem2 mem -t ~{threadCount} -5 -S -P assembly.fasta \
-            ~{linked_read_fasta_1} \
-            ~{linked_read_fasta_2} \
-            | samtools sort -n -@ 24 - -o ${ASM_FA_NAME}.${READ1_NAME}.bam 
-
-        fi
-
+        # index, align, and sort reads to assembly
+        bwa-mem2 index assembly.fasta
+        bwa-mem2 mem -t ~{threadBwa} -5 -S -P assembly.fasta \
+                 ~{linked_read_fasta_1} ~{linked_read_fasta_2} | \
+            samtools view -h -q ~{min_mapq} - | \
+            samtools sort -n -@ ~{threadSort} - -O BAM -o ~{asm_name}.~{read_name}.bam 
     >>>
 
     output {
-        File? outBam = glob("*bam")[0]
-
+        File outBam = "${asm_name}.${read_name}.bam "
     }
 
     runtime {

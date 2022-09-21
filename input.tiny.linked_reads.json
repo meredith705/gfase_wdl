@@ -1,0 +1,7 @@
+{
+  "runGFAsePhase.assemblyGFA": "tiny_test_data/test.gfa",
+  "runGFAsePhase.linkedRead1Files": ["tiny_test_data/test_hic_1.fastq.gz", "tiny_test_data/test_hic_1.fastq.gz"], 
+  "runGFAsePhase.linkedRead2Files": ["tiny_test_data/test_hic_2.fastq.gz", "tiny_test_data/test_hic_2.fastq.gz"],
+  "runGFAsePhase.bwaAlignment.threadCount": 2
+}
+
