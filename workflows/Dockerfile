@@ -23,13 +23,15 @@ WORKDIR /home/apps
 RUN wget https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.2.1/bwa-mem2-2.2.1_x64-linux.tar.bz2 && \ 
     tar -jxf bwa-mem2-2.2.1_x64-linux.tar.bz2
 
-
-#ADD https://api.github.com/repos/rlorigro/GFAse/git/refs/heads/wdl_debug version.json
+WORKDIR /home/apps
+RUN mkdir kmc && \
+    cd kmc && \
+    wget https://github.com/refresh-bio/KMC/releases/download/v3.2.1/KMC3.2.1.linux.tar.gz && \
+    tar -xzf KMC3.2.1.linux.tar.gz
 
 RUN cd /home/apps && \
     git clone https://github.com/rlorigro/GFAse.git && \
     cd GFAse && \
-    #git checkout 954038b6b47823afa209dbbafd20ffb8247e91e4 && \
     mkdir build && \
     cd build && \
     cmake .. && \
@@ -40,6 +42,7 @@ ENV PATH="/home/apps/GFAse/data:${PATH}"
 ENV PATH="/home/apps/GFAse/scripts:${PATH}"
 ENV PATH="/home/apps/samtools-1.15.1:${PATH}"
 ENV PATH="/home/apps/bwa-mem2-2.2.1_x64-linux:${PATH}"
+ENV PATH="/home/apps/kmc/bin:${PATH}"
 
 
 
