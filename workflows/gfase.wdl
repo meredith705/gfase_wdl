@@ -135,7 +135,6 @@ task gfaseLinkedRead {
         # hi-c phasing bam
         Array[File] bamFiles
         Int min_mapq = 2
-        String target_contig_prefix = "PR"
         # runtime configurations
         Int memSizeGB = 128
         Int threadCount = 46
@@ -163,8 +162,7 @@ task gfaseLinkedRead {
         -g ~{assemblyGfa} \
         -o gfase \
         -m ~{min_mapq} \
-        -t ~{threadCount} \
-        -p ~{target_contig_prefix}
+        -t ~{threadCount} 
                 
         echo done >> log.txt
  
