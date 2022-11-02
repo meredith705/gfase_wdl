@@ -61,6 +61,7 @@ task extractAmbFromGFAse {
         Int threadCount = 1
         Int memoryGB = 4
         String dockerImage="meredith705/gfase:latest"
+        Int disk_size = 5 * round(size(phase0, 'G') + size(phase1, 'G') + size(unphased, 'G')) + 20
     }
 
     command <<<
@@ -92,6 +93,7 @@ task extractAmbFromGFAse {
     runtime {
         docker: dockerImage
         cpu: threadCount
+        disks: "local-disk " + disk_size + " SSD"
         memory: memoryGB + "GB"
     }
 }
@@ -103,6 +105,7 @@ task extractAmbFromGFA {
         Int threadCount = 1
         Int memoryGB = 4
         String dockerImage="meredith705/gfase:latest"
+        Int disk_size = 5 * round(size(gfa, 'G')) + 20
     }
 
     command <<<
@@ -117,17 +120,19 @@ task extractAmbFromGFA {
         # to turn off echo do 'set +o xtrace'
         set -o xtrace
 
-        python3 /home/apps/GFAse/scripts/get_haplotypes_from_shasta.py -i ~{gfa} -o haps
+        python3 /home/apps/GFAse/scripts/get_haplotypes_from_shasta.py -i ~{gfa} -o haps | gzip > log.txt.gz
     >>>
     
     output {
         File asm0 = "haps/hap_0.fasta"
         File asm1 = "haps/hap_1.fasta"
+        File log = "log.txt.gz"
     }
 
     runtime {
         docker: dockerImage
         cpu: threadCount
+        disks: "local-disk " + disk_size + " SSD"
         memory: memoryGB + "GB"
     }
 }
