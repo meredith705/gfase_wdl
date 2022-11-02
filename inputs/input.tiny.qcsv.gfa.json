@@ -1,0 +1,6 @@
+{
+  "gfaseSVevaluation.assemblyGfa": "tiny_test_data/test.gfa"
+  "gfaseSVevaluation.reference": "tiny_test_data/ref.fa",
+  "gfaseSVevaluation.vntrAnnotations": "tiny_test_data/vntr.bed",
+  "gfaseSVevaluation.extractAmbFromGFA.dockerImage": "jmonlong-gfase"
+}

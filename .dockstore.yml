@@ -35,3 +35,9 @@ workflows:
       - name: Melissa Meredith
         email: mmmeredi@ucsc.edu
         orcid: 0000-0001-5736-3193
+  - name: gfase_sv_evaluation
+    subclass: WDL
+    primaryDescriptorPath: /QC/workflows/sv_evaluation.wdl
+    authors:
+      - name: Jean Monlong
+        email: jmonlong@ucsc.edu
