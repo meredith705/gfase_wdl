@@ -32,6 +32,7 @@ RUN mkdir kmc && \
 RUN cd /home/apps && \
     git clone https://github.com/rlorigro/GFAse.git && \
     cd GFAse && \
+    git checkout 5412b86db184bed984129ac17d811bf554308afb && \
     mkdir build && \
     cd build && \
     cmake .. && \
