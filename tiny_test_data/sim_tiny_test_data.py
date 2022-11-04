@@ -1,13 +1,15 @@
 import numpy
 import random
 from Bio.Seq import MutableSeq
+from Bio.SeqRecord import SeqRecord
+from Bio import SeqIO
 
 
 _nuc = numpy.array(["A", "T", "C", "G"])
 
 
 def randSeq(length):
-    seqArray = _nuc[[random.randint(0,3) for i in range(length)]]
+    seqArray = _nuc[[random.randint(0, 3) for i in range(length)]]
     return(MutableSeq("".join(seqArray)))
 
 
@@ -22,6 +24,8 @@ kmer_size = 11
 
 # "ancestral" sequence
 anc = randSeq(N)
+# write as "reference"
+SeqIO.write([SeqRecord(anc, id='chr1')], "ref.fa", "fasta")
 
 # 2 sets of parent haplotypes with some SNPs
 parents = [[], []]

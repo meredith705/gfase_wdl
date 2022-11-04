@@ -42,17 +42,25 @@ workflow dipcallWhatshapAsmgene {
             outputIdentifier=sampleId
     }
 
-    call asmgene_t.asmgene {
+    call asmgene_t.asmgene as asmgenePat {
         input:
             assemblyFasta=assemblyPat,
             genesFasta=asmGenesFasta,
             referenceFasta=asmgeneReferenceFasta
     }
 
+    call asmgene_t.asmgene as asmgeneMat {
+        input:
+        assemblyFasta=assemblyMat,
+        genesFasta=asmGenesFasta,
+        referenceFasta=asmgeneReferenceFasta
+    }
+
     output {
         File whatshapTarball = coalesceResults.outputTarball
         File whatshapReport = coalesceResults.fullOutput
-        File asmgeneStats = asmgene.geneStats
+        File asmgeneStatsPat = asmgenePat.geneStats
+        File asmgeneStatsMat = asmgeneMat.geneStats
 		File dipcallTarball = dipcall.outputTarball
 		File dipcallVCF = addPhaseSetToVCF.phasettedVcf
 		File dipcallBED = dipcall.outputBED

@@ -24,10 +24,14 @@ Just that the WDL/commands run without an error.
 
 ```sh
 ## linked-read
-java -jar $CROMWELL_JAR run workflows/gfase.wdl -i input.tiny.linked_reads.json
+java -jar $CROMWELL_JAR run workflows/gfase.wdl -i inputs/input.tiny.linked_reads.json
 
 ## trio
-java -jar $CROMWELL_JAR run workflows/gfase.wdl -i input.tiny.trio.json
+java -jar $CROMWELL_JAR run workflows/gfase.wdl -i inputs/input.tiny.trio.json
+
+## QC - SV calling
+java -jar $CROMWELL_JAR run QC/workflows/sv_evaluation.wdl -i inputs/input.tiny.qcsv.json
+java -jar $CROMWELL_JAR run QC/workflows/sv_evaluation.wdl -i inputs/input.tiny.qcsv.gfa.json
 ```
 
 The tiny dataset was made using the python script in [tiny_test_data](tiny_test_data):
