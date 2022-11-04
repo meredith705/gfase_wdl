@@ -17,10 +17,10 @@ RUN wget https://github.com/samtools/samtools/releases/download/1.15.1/samtools-
     rm samtools-1.15.1.tar.bz2 && \
     cd samtools-1.15.1 && \
     ./configure && \
-    make 
+    make
 
 WORKDIR /home/apps
-RUN wget https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.2.1/bwa-mem2-2.2.1_x64-linux.tar.bz2 && \ 
+RUN wget https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.2.1/bwa-mem2-2.2.1_x64-linux.tar.bz2 && \
     tar -jxf bwa-mem2-2.2.1_x64-linux.tar.bz2
 
 WORKDIR /home/apps
@@ -32,12 +32,12 @@ RUN mkdir kmc && \
 RUN cd /home/apps && \
     git clone https://github.com/rlorigro/GFAse.git && \
     cd GFAse && \
-    git checkout da3abebccf5612462b826f6e86b1de44c17cc1e4 && \
+    git checkout 5412b86db184bed984129ac17d811bf554308afb && \
     mkdir build && \
     cd build && \
     cmake .. && \
-    make  
-    
+    make
+
 ENV PATH="/home/apps/GFAse/build:${PATH}"
 ENV PATH="/home/apps/GFAse/data:${PATH}"
 ENV PATH="/home/apps/GFAse/scripts:${PATH}"
@@ -49,4 +49,3 @@ ENV PATH="/home/apps/kmc/bin:${PATH}"
 
 RUN mkdir -p /data
 WORKDIR /data
-
