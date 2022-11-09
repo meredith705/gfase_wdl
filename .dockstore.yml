@@ -28,6 +28,13 @@ workflows:
       - name: Melissa Meredith
         email: mmmeredi@ucsc.edu
         orcid: 0000-0001-5736-3193
+  - name: asmgene
+    subclass: WDL
+    primaryDescriptorPath: /QC/tasks/asmgene.wdl
+    authors:
+      - name: Melissa Meredith
+        email: mmmeredi@ucsc.edu
+        orcid: 0000-0001-5736-3193
   - name: yak_dipcall_whatshap_asmgene
     subclass: WDL
     primaryDescriptorPath: /QC/workflows/yak_dipcall_whatshap_asmgene.wdl

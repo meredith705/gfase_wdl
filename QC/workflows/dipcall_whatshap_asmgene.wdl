@@ -9,7 +9,8 @@ workflow dipcallWhatshapAsmgene {
     input {
         File assemblyPat
         File assemblyMat
-        File truthVcf
+        File? assemblyUnphased
+        File? truthVcf
         File reference
         String sampleId="sample"
         File asmGenesFasta
@@ -17,53 +18,83 @@ workflow dipcallWhatshapAsmgene {
 
     }
 
-    call dipcall_t.dipcall as dipcall {
-        input:
-            assemblyFastaPat=assemblyPat,
-            assemblyFastaMat=assemblyMat,
-            referenceFasta=reference
+    if (defined(truthVcf)){
+        call dipcall_t.dipcall as dipcall {
+            input:
+                assemblyFastaPat=assemblyPat,
+                assemblyFastaMat=assemblyMat,
+                referenceFasta=reference
+        }
+
+        call addPhaseSetToVCF {
+            input:
+                gzippedVcf=dipcall.outputVCF,
+                outputIdentifier=sampleId,
+        }
+
+        call whatshap_t.whatshapAnalysis {
+            input:
+                queryVcf=addPhaseSetToVCF.phasettedVcf,
+                truthVcf=truthVcf
+        }
+
+        call whatshap_t.coalesceResults {
+            input:
+                tarballs=[whatshapAnalysis.outputTarball],
+                outputIdentifier=sampleId
+        }
     }
 
-    call addPhaseSetToVCF {
-        input:
-            gzippedVcf=dipcall.outputVCF,
-            outputIdentifier=sampleId,
+    if (defined(assemblyUnphased)){
+        call asmgene_t.asmgene as asmgenePatunp {
+            input:
+                assemblyFasta=assemblyPat,
+                unphasedFasta=assemblyUnphased,
+                genesFasta=asmGenesFasta,
+                referenceFasta=asmgeneReferenceFasta
+        }
+
+        call asmgene_t.asmgene as asmgeneMatunp {
+            input:
+                assemblyFasta=assemblyMat,
+                unphasedFasta=assemblyUnphased,
+                genesFasta=asmGenesFasta,
+                referenceFasta=asmgeneReferenceFasta
+        }
     }
 
-    call whatshap_t.whatshapAnalysis {
-        input:
-            queryVcf=addPhaseSetToVCF.phasettedVcf,
-            truthVcf=truthVcf
-    }
+    if (!defined(assemblyUnphased)){
+        call asmgene_t.asmgene as asmgenePat {
+            input:
+                assemblyFasta=assemblyPat,
+                genesFasta=asmGenesFasta,
+                referenceFasta=asmgeneReferenceFasta
+        }
 
-    call whatshap_t.coalesceResults {
-        input:
-            tarballs=[whatshapAnalysis.outputTarball],
-            outputIdentifier=sampleId
-    }
-
-    call asmgene_t.asmgene as asmgenePat {
-        input:
-            assemblyFasta=assemblyPat,
+        call asmgene_t.asmgene as asmgeneMat {
+            input:
+            assemblyFasta=assemblyMat,
             genesFasta=asmGenesFasta,
             referenceFasta=asmgeneReferenceFasta
+        }
     }
 
-    call asmgene_t.asmgene as asmgeneMat {
-        input:
-        assemblyFasta=assemblyMat,
-        genesFasta=asmGenesFasta,
-        referenceFasta=asmgeneReferenceFasta
-    }
+    File asmgeneGeneStatsPat = select_first([asmgenePat.geneStats,asmgenePatunp.geneStats] )
+    File asmgeneGPStatsPat = select_first([asmgenePat.perGeneStats,asmgenePatunp.perGeneStats])
+    File asmgeneGeneStatsMat = select_first([asmgeneMat.geneStats,asmgeneMatunp.geneStats ])
+    File asmgeneGPStatsMat = select_first([asmgeneMat.perGeneStats,asmgeneMatunp.perGeneStats])
+
 
     output {
-        File whatshapTarball = coalesceResults.outputTarball
-        File whatshapReport = coalesceResults.fullOutput
-        File asmgeneStatsPat = asmgenePat.geneStats
-        File asmgeneStatsMat = asmgeneMat.geneStats
-		File dipcallTarball = dipcall.outputTarball
-		File dipcallVCF = addPhaseSetToVCF.phasettedVcf
-		File dipcallBED = dipcall.outputBED
+        File? whatshapTarball = coalesceResults.outputTarball
+        File? whatshapReport = coalesceResults.fullOutput
+        File asmgeneStatsPat = asmgeneGeneStatsPat
+        File asmgenePGStatsPat = asmgeneGPStatsPat
+        File asmgeneStatsMat = asmgeneGeneStatsMat
+        File asmgenePGStatsMat = asmgeneGPStatsMat
+		File? dipcallTarball = dipcall.outputTarball
+		File? dipcallVCF = addPhaseSetToVCF.phasettedVcf
+		File? dipcallBED = dipcall.outputBED
     }
 }
 

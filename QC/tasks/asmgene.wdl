@@ -8,8 +8,10 @@ task asmgene {
     input{
         File assemblyFasta
         File genesFasta
+        File? unphasedFasta
         File? referenceFasta
         File? genesToReferencePaf
+        Float asmgene_identity = 0.97
         # runtime configurations
         Int threadCount = 32
         Int memSizeGB = 64
@@ -42,11 +44,20 @@ task asmgene {
             exit 1
         fi
 
+        if [[ -f "~{unphasedFasta}" ]]; then
+
+            cat ~{unphasedFasta} >> ~{assemblyFasta}
+            PREFIX=$PREFIX.unp
+        fi
+
         # Aligning genes to assembly
         minimap2 -cx splice:hq -t ~{threadCount} ~{assemblyFasta} ~{genesFasta} > $PREFIX.paf
 
         # Computing statistics for gene completeness
-        paftools.js asmgene -a genesToRef.paf $PREFIX.paf > $PREFIX.gene_stats.txt
+        paftools.js asmgene -i~{asmgene_identity} -a genesToRef.paf $PREFIX.paf > $PREFIX.~{asmgene_identity}.gene_stats.txt
+
+        # Output the stats for each gene to a file 
+        paftools.js asmgene -i~{asmgene_identity} -e -a genesToRef.paf $PREFIX.paf > $PREFIX.~{asmgene_identity}.per_gene_stats.txt
     >>>
 
     runtime {
@@ -59,6 +70,7 @@ task asmgene {
 
     output {
         File geneStats = glob("*.gene_stats.txt")[0]
+        File perGeneStats = glob("*.per_gene_stats.txt")[0]
     }
 }
 
