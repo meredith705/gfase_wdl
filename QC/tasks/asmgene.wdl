@@ -1,7 +1,53 @@
 version 1.0
 
 workflow runAsmgene {
-	call asmgene
+	input{
+        File assemblyFa
+        File genesFa
+        File? unphasedFa
+        File? referenceFa
+        File? genesToReferencePaf
+        Float asmgene_identity = 0.97
+        # runtime configurations
+        Int threadCount = 32
+        Int memSizeGB = 64
+        Int diskSizeGB = 32
+        String dockerImage = "tpesout/hpp_minimap2:latest"
+    }
+
+    if (defined(unphasedFa)){
+        call asmgene as asmgeneAsmUnp {
+            input:
+                assemblyFasta=assemblyFa,
+                unphasedFasta=unphasedFa,
+                genesFasta=genesFa,
+                genesToReferencePaf=genesToReferencePaf,
+                referenceFasta=referenceFa
+        }
+
+    }
+
+    if (!defined(unphasedFa)){
+        call asmgene as asmgeneAsm {
+            input:
+                assemblyFasta=assemblyFa,
+                genesFasta=genesFa,
+                genesToReferencePaf=genesToReferencePaf,
+                referenceFasta=referenceFa
+        }
+
+    }
+
+    File asmgeneGeneStatsAsm = select_first([asmgeneAsm.geneStats,asmgeneAsmUnp.geneStats] )
+    File asmgeneGPStatsAsm = select_first([asmgeneAsm.perGeneStats,asmgeneAsmUnp.perGeneStats])
+
+
+    output {
+        File geneStats = asmgeneGeneStatsAsm
+        File perGeneStats = asmgeneGPStatsAsm
+    }
+
+
 }
 
 task asmgene {
