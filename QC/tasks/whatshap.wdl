@@ -4,7 +4,7 @@ workflow runWhatshapStats {
 
     input {
         Array[File] queryVcfs
-        File truthVcf
+        File? truthVcf
         String outputIdentifier="sample"
     }
 
@@ -30,7 +30,7 @@ workflow runWhatshapStats {
 task whatshapAnalysis {
     input {
         File queryVcf
-        File truthVcf
+        File? truthVcf
         Int threadCount = 4
         Int memoryGB = 4
         String dockerImage="tpesout/whatshap:latest"
