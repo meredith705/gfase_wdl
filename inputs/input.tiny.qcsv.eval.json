@@ -1,0 +1,6 @@
+{
+  "gfaseSVevaluation.truthVcf": "HG002_SVs_Tier1_v0.6.vcf.gz",
+  "gfaseSVevaluation.callVcf": "HG002_SVs_Tier1_v0.6.vcf.gz",
+  "gfaseSVevaluation.confidentRegions": "HG002_SVs_Tier1_v0.6.bed",
+  "gfaseSVevaluation.reference": "hs37d5.fa"
+}
