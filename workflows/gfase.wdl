@@ -6,6 +6,7 @@ version 1.0
 ## 2022-08-01
 
 import "../tasks/bwa_mem2.wdl" as bwamem_t
+import "gfase_phase_contacts_with_monte_carlo.wdl" as gfaseLinkedRead
 
 workflow runGFAsePhase {
 	
@@ -65,13 +66,15 @@ workflow runGFAsePhase {
         File? outputPatAssembly             = gfaseTrioPhase.outPatAssembly
         File? outputUnphasedAssembly        = gfaseTrioPhase.outUnphasedAssembly
         File? outputPhaseChains             = gfaseTrioPhase.outPhaseChains
-        File? outputConfig                  = gfaseLinkedRead.outconfig
-        File? outputContacts                = gfaseLinkedRead.outcontacts 
-        File? outputFaPhase0                = gfaseLinkedRead.outFastaP0 
-        File? outputFaPhase1                = gfaseLinkedRead.outFastaP1 
-        File? outputPhases                  = gfaseLinkedRead.outPhases 
-        File? outputFaUnphasedInnitial      = gfaseLinkedRead.outFastaUnP 
-        File? outputFaUnPin                 = gfaseLinkedRead.outFastaUnPinn
+        File? outputConfig                  = gfaseLinkedRead.outputConfig
+        File? outputContacts                = gfaseLinkedRead.outputContacts
+        File? outputFaPhase0                = gfaseLinkedRead.outputFaPhase0 
+        File? outputFaPhase1                = gfaseLinkedRead.outputFaPhase1 
+        File? outputPhases                  = gfaseLinkedRead.outputPhases 
+        File? outputUnzipGFA                = gfaseLinkedRead.outputUnzipGFA
+        File? outputChainedGFA              = gfaseLinkedRead.outputChainedGFA
+        File? outputFaUnphased              = gfaseLinkedRead.outputFaUnphased
+        
     }
 
 }
@@ -128,65 +131,4 @@ task gfaseTrioPhase {
 
     }
 }
-
-task gfaseLinkedRead {
-    input {
-        File assemblyGfa
-        # hi-c phasing bam
-        Array[File] bamFiles
-        Int min_mapq = 2
-        # runtime configurations
-        Int memSizeGB = 128
-        Int threadCount = 46
-        Int disk_size = 10 * round(size(assemblyGfa, 'G')) + round(size(bamFiles, 'G')) + 100
-        String dockerImage = "meredith705/gfase:latest"
-    }
-    command <<<
-        # Set the exit code of a pipeline to that of the rightmost command
-        # to exit with a non-zero status, or zero if all commands of the pipeline exit
-        set -o pipefail
-        # cause a bash script to exit immediately when a command fails
-        set -e
-        # cause the bash shell to treat unset variables as an error and exit immediately
-        set -u
-        # echo each line of the script to stdout so we can see what is happening
-        # to turn off echo do 'set +o xtrace'
-        set -o xtrace
-
-        samtools merge -n -@ ~{threadCount} -o allBams.bam ~{sep=" " bamFiles}
-
-        echo hi-c phase >> log.txt
-        # hi-c 
-        phase_contacts \
-        -i allBams.bam \
-        -g ~{assemblyGfa} \
-        -o gfase \
-        -m ~{min_mapq} \
-        -t ~{threadCount} 
-                
-        echo done >> log.txt
- 
-    >>>
-
-    runtime {
-        docker: dockerImage
-        disks: "local-disk " + disk_size + " SSD"
-        memory: memSizeGB + " GB"
-        cpu: threadCount
-    }
-
-    output {
-        File outconfig       = "gfase/config.csv"
-        File outcontacts     = "gfase/contacts.csv"
-        File outFastaP0      = "gfase/phase_0.fasta"
-        File outFastaP1      = "gfase/phase_1.fasta"
-        File outPhases       = "gfase/phases.csv"
-        File outFastaUnP     = "gfase/unphased.fasta"
-        File outFastaUnPinn  = "gfase/unphased_initial.fasta"
-        File outWDLlog       = "log.txt"
-
-    }
-}
-
-
 
