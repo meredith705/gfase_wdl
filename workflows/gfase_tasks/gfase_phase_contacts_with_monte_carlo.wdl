@@ -7,44 +7,35 @@ version 1.0
 
 workflow RunGfaseLinkedReadmc {
     input {
-        File assemblyGFA_w                    # gfa from Shasta/verrko
-        Array[File] bamFiles_w                 # hi-c phasing bam
-        Int min_mapq_w = 1                     # default min mapq is 1
-        Int threadCount_w = 46                 # Minimum required mapq value for mapping to be counted.
-        String otherPhaseContactsArugments_w = "--use_homology --skip_unzip"
-
-        # other possible arugments
-        Int? core_iterations_w                 # Iterations for each shallow convergence in the sampling process (uses 3*core_iterations)
-        Int? sample_size_w                     # Num shallowly converged phase states to sample from
-        Int? n_rounds_w                        # Rounds to sample and merge
+        File assemblyGFA                    # gfa from Shasta/verrko
+        Array[File] bamFiles                 # hi-c phasing bam
+        Int min_mapq = 1                     # default min mapq is 1
+        Int threadCount = 46                 # Minimum required mapq value for mapping to be counted.
+        String otherPhaseContactsArugments = "--use_homology --skip_unzip"
 
         # runtime configurations
-        Int memSizeGB_w = 128
-        Int disk_size_w = 10 * round(size(assemblyGfa, 'G')) + round(size(bamFiles, 'G')) + 100
-        String dockerImage_w = "meredith705/gfase:latest"
+        Int memSizeGB = 128
+        Int disk_size = 10 * round(size(assemblyGFA, 'G')) + round(size(bamFiles, 'G')) + 100
+        String dockerImage = "meredith705/gfase:latest"
     }
 
     # phase the gfa using the linked read alignment
-    call gfase_phase_contacts_with_monte_carlo as gfaseLinkedRead {
+    call gfase_phase_contacts_with_monte_carlo as gfasePhaseContactsMC {
         input:
-            assemblyGfa         = assemblyGFA_w,
-            bamFiles            = bamFiles_w,
-            dockerImage         = dockerImage_w
+            assemblyGfa         = assemblyGFA,
+            bamFiles            = bamFiles,
+            dockerImage         = dockerImage
         }
 
-            
-    }
-
-
     output {
-        File outputConfig                  = gfaseLinkedRead.outconfig
-        File outputContacts                = gfaseLinkedRead.outcontacts 
-        File outputFaPhase0                = gfaseLinkedRead.outFastaP0 
-        File outputFaPhase1                = gfaseLinkedRead.outFastaP1 
-        File outputPhases                  = gfaseLinkedRead.outPhases 
-        File outputUnzipGFA                = gfaseLinkedRead.outUnzipGFA
-        File outputChainedGFA              = gfaseLinkedRead.outChainedGFA
-        File outputFaUnphased              = gfaseLinkedRead.outFastaUnP 
+        File outputConfig                  = gfasePhaseContactsMC.outconfig
+        File outputContacts                = gfasePhaseContactsMC.outcontacts 
+        File outputFaPhase0                = gfasePhaseContactsMC.outFastaP0 
+        File outputFaPhase1                = gfasePhaseContactsMC.outFastaP1 
+        File outputPhases                  = gfasePhaseContactsMC.outPhases 
+        File outputUnzipGFA                = gfasePhaseContactsMC.outUnzipGFA
+        File outputChainedGFA              = gfasePhaseContactsMC.outChainedGFA
+        File outputFaUnphased              = gfasePhaseContactsMC.outFastaUnP 
     }
 
 }
