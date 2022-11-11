@@ -6,7 +6,7 @@ version 1.0
 ## 2022-08-01
 
 import "../tasks/bwa_mem2.wdl" as bwamem_t
-import "gfase_phase_contacts_with_monte_carlo.wdl" as gfaseLinkedRead
+import "gfase_tasks/gfase_phase_contacts_with_monte_carlo.wdl" as gfaseLinkedRead
 
 workflow runGFAsePhase {
 	
