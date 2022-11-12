@@ -7,11 +7,11 @@ version 1.0
 
 workflow RunGfaseLinkedReadmc {
     input {
-        File assemblyGFA                    # gfa from Shasta/verrko
-        Array[File] bamFiles                 # hi-c phasing bam
-        Int min_mapq = 1                     # default min mapq is 1
-        Int threadCount = 46                 # Minimum required mapq value for mapping to be counted.
-        String otherPhaseContactsArugments = "--use_homology --skip_unzip"
+        File assemblyGFA                        # gfa from Shasta/verrko
+        Array[File] bamFiles                    # hi-c phasing bam
+        Int min_mapq = 1                        # default min mapq is 1
+        Int threadCount = 46                    # Minimum required mapq value for mapping to be counted.
+        String otherPhaseContactsArugments = "" # for verrko graphs use --use_homology --skip_unzip
 
         # runtime configurations
         Int memSizeGB = 128
@@ -42,11 +42,11 @@ workflow RunGfaseLinkedReadmc {
 
 task gfase_phase_contacts_with_monte_carlo {
     input {
-        File assemblyGfa                    # gfa from Shasta/verrko
+        File assemblyGfa                     # gfa from Shasta/verrko
         Array[File] bamFiles                 # hi-c phasing bam
         Int min_mapq = 1                     # default min mapq is 1
         Int threadCount = 46                 # Minimum required mapq value for mapping to be counted.
-        String otherPhaseContactsArugments = "--use_homology --skip_unzip"
+        String otherPhaseContactsArugments = ""
 
         # other possible arugments
         Int? core_iterations                 # Iterations for each shallow convergence in the sampling process (uses 3*core_iterations)
@@ -74,7 +74,8 @@ task gfase_phase_contacts_with_monte_carlo {
         -g ~{assemblyGfa} \
         -o gfase \
         -m ~{min_mapq} \
-        -t ~{threadCount} 
+        -t ~{threadCount} \
+        ~{otherPhaseContactsArugments}
                 
         echo done >> log.txt
  
