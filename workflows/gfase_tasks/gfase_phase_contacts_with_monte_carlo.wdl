@@ -24,7 +24,8 @@ workflow RunGfaseLinkedReadmc {
         input:
             assemblyGfa         = assemblyGFA,
             bamFiles            = bamFiles,
-            dockerImage         = dockerImage
+            dockerImage         = dockerImage,
+            otherPhaseContactsArugments = otherPhaseContactsArugments
         }
 
     output {
@@ -33,7 +34,7 @@ workflow RunGfaseLinkedReadmc {
         File outputFaPhase0                = gfasePhaseContactsMC.outFastaP0 
         File outputFaPhase1                = gfasePhaseContactsMC.outFastaP1 
         File outputPhases                  = gfasePhaseContactsMC.outPhases 
-        File outputUnzipGFA                = gfasePhaseContactsMC.outUnzipGFA
+        File? outputUnzipGFA                = gfasePhaseContactsMC.outUnzipGFA
         File outputChainedGFA              = gfasePhaseContactsMC.outChainedGFA
         File outputFaUnphased              = gfasePhaseContactsMC.outFastaUnP 
     }
@@ -95,7 +96,7 @@ task gfase_phase_contacts_with_monte_carlo {
         File outFastaP1      = "gfase/phase_1.fasta"
         File outPhases       = "gfase/phases.csv"
         # unzipped gfa and chained.gfa
-        File outUnzipGFA     = "gfase/unzipped.gfa"
+        File? outUnzipGFA     = "gfase/unzipped.gfa"
         File outChainedGFA   = "gfase/chained.gfa"
         File outFastaUnP     = "gfase/unphased.fasta"
         File outWDLlog       = "log.txt"
