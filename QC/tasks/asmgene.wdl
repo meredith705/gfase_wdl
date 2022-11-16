@@ -91,13 +91,13 @@ task asmgene {
         fi
 
         if [[ -f "~{unphasedFasta}" ]]; then
-
-            cat ~{unphasedFasta} >> ~{assemblyFasta}
+            cp ~{assemblyFasta} asm.fa
+            cat ~{unphasedFasta} >> asm.fa
             PREFIX=$PREFIX.unp
         fi
 
         # Aligning genes to assembly
-        minimap2 -cx splice:hq -t ~{threadCount} ~{assemblyFasta} ~{genesFasta} > $PREFIX.paf
+        minimap2 -cx splice:hq -t ~{threadCount} asm.fa ~{genesFasta} > $PREFIX.paf
 
         # Computing statistics for gene completeness
         paftools.js asmgene -i~{asmgene_identity} -a genesToRef.paf $PREFIX.paf > $PREFIX.~{asmgene_identity}.gene_stats.txt
