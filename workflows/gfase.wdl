@@ -64,7 +64,7 @@ workflow runGFAsePhase {
     output {
         File? outputMatAssembly             = gfaseTrioPhase.outMatAssembly
         File? outputPatAssembly             = gfaseTrioPhase.outPatAssembly
-        File? outputUnphasedAssembly        = gfaseTrioPhase.outUnphasedAssembly
+        File? outputTrioUnphasedAssembly        = gfaseTrioPhase.outUnphasedAssembly
         File? outputPhaseChains             = gfaseTrioPhase.outPhaseChains
         File? outputConfig                  = gfaseLinkedRead.outputConfig
         File? outputContacts                = gfaseLinkedRead.outputContacts
@@ -73,7 +73,7 @@ workflow runGFAsePhase {
         File? outputPhases                  = gfaseLinkedRead.outputPhases 
         File? outputUnzipGFA                = gfaseLinkedRead.outputUnzipGFA
         File? outputChainedGFA              = gfaseLinkedRead.outputChainedGFA
-        File? outputFaUnphased              = gfaseLinkedRead.outputFaUnphased
+        File? outputLRFaUnphased              = gfaseLinkedRead.outputFaUnphased
         
     }
 
