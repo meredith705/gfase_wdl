@@ -90,8 +90,8 @@ task asmgene {
             exit 1
         fi
 
+        cp ~{assemblyFasta} asm.fa
         if [[ -f "~{unphasedFasta}" ]]; then
-            cp ~{assemblyFasta} asm.fa
             cat ~{unphasedFasta} >> asm.fa
             PREFIX=$PREFIX.unp
         fi
