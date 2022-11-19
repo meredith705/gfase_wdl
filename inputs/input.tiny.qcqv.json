@@ -5,5 +5,5 @@
   "QVnontrio.sampleReadsILM": ["tiny_test_data/test_hic_1.fastq.gz",
                                "tiny_test_data/test_hic_2.fastq.gz"],
   "QVnontrio.sampleId": "test",
-  "QVnontrio.yakQV.bloomSize": 8
+  "QVnontrio.yakCount.bloomSize": 8
 }
