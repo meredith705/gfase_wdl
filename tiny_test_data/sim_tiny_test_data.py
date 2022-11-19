@@ -54,24 +54,26 @@ gfa_f = open('test.gfa', 'wt')
 # first node
 gfa_f.write('S\t1\t{}\n'.format(haps[0][:int(.1*N)]))
 # first bubble
-gfa_f.write('S\tPR.2\t{}\n'.format(haps[0][int(.1*N):int(.2*N)]))
-gfa_f.write('S\tPR.3\t{}\n'.format(haps[1][int(.1*N):int(.2*N)]))
+gfa_f.write('S\tPR.1.1.1.0\t{}\n'.format(haps[0][int(.1*N):int(.2*N)]))
+gfa_f.write('S\tPR.1.1.1.1\t{}\n'.format(haps[1][int(.1*N):int(.2*N)]))
 # middle region
 gfa_f.write('S\t4\t{}\n'.format(haps[1][int(.2*N):int(.8*N)]))
 # second bubble
-gfa_f.write('S\tPR.5\t{}\n'.format(haps[0][int(.8*N):int(.9*N)]))
-gfa_f.write('S\tPR.6\t{}\n'.format(haps[1][int(.8*N):int(.9*N)]))
+gfa_f.write('S\tPR.2.1.1.0\t{}\n'.format(haps[0][int(.8*N):int(.9*N)]))
+gfa_f.write('S\tPR.2.1.1.1\t{}\n'.format(haps[1][int(.8*N):int(.9*N)]))
 # end region
 gfa_f.write('S\t7\t{}\n'.format(haps[0][int(.9*N):]))
+# "floating" unphased region
+gfa_f.write('S\t8\t{}\n'.format(haps[1][int(.9*N):]))
 # edges
-gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format(1, 'PR.2'))
-gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format(1, 'PR.3'))
-gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format('PR.2', 4))
-gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format('PR.3', 4))
-gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format(4, 'PR.5'))
-gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format(4, 'PR.6'))
-gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format('PR.6', 7))
-gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format('PR.5', 7))
+gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format(1, 'PR.1.1.1.0'))
+gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format(1, 'PR.1.1.1.1'))
+gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format('PR.1.1.1.0', 4))
+gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format('PR.1.1.1.1', 4))
+gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format(4, 'PR.2.1.1.0'))
+gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format(4, 'PR.2.1.1.1'))
+gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format('PR.2.1.1.0', 7))
+gfa_f.write('L\t{}\t+\t{}\t+\t0M\n'.format('PR.2.1.1.1', 7))
 gfa_f.close()
 
 # simulate hic reads
@@ -120,3 +122,11 @@ for km in uniq_kmers[1]:
     km_f2.write('>{}\n{}\n'.format(kmid, km))
     kmid += 1
 km_f2.close()
+
+# simulate gfase outputs
+SeqIO.write([SeqRecord(MutableSeq(haps[0][:int(.9*N)]), id='contig_0')],
+            "out_phase0.fa", "fasta")
+SeqIO.write([SeqRecord(MutableSeq(haps[1][:int(.9*N)]), id='contig_1')],
+            "out_phase1.fa", "fasta")
+SeqIO.write([SeqRecord(MutableSeq(haps[1][int(.9*N):]), id='unphased')],
+            "out_unphased.fa", "fasta")
