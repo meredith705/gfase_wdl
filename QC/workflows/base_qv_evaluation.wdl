@@ -9,7 +9,9 @@ workflow QVnontrio {
         File? assemblyPhase0
         File? assemblyPhase1
         File? assemblyUnphased
-        Array[File] sampleReadsILM
+        Array[File]? sampleReadsILM
+        Array[File]? sampleReadsILMcram
+        File? referenceFasta
         String sampleId="sample"
     }
 
@@ -31,9 +33,21 @@ workflow QVnontrio {
     File asm0 = select_first([extractAmbFromGFA.asm0, extractAmbFromGFAse.asm0])
     File asm1 = select_first([extractAmbFromGFA.asm1, extractAmbFromGFAse.asm1])
 
+    if(!defined(sampleReadsILM) && defined(sampleReadsILMcram) && defined(referenceFasta)){
+        scatter (cram_file in select_first([sampleReadsILMcram])){
+            call convertCRAMtoFASTQ {
+                input:
+                cram_file=cram_file,
+                reference_fa=select_first([referenceFasta])
+            }
+        }
+    }
+
+    Array[File] readFiles = select_first([sampleReadsILM, convertCRAMtoFASTQ.fastq_file])
+    
     call yakCount {
         input:
-        readFiles=sampleReadsILM,
+        readFiles=readFiles,
         sampleName=sampleId
     }
 
@@ -54,6 +68,37 @@ workflow QVnontrio {
 ##
 ## TASKS
 ##
+
+
+task convertCRAMtoFASTQ {
+    input{
+        File cram_file
+        File reference_fa
+        Int memSizeGB=4
+        Int threadCount=8
+        Int diskSizeGB= 5 * round(size(cram_file, 'G')) + 50
+        String dockerImage="quay.io/biocontainers/samtools:1.16.1--h6899075_1"
+    }
+    String outprefix = basename(cram_file, ".cram")
+    command <<<
+        set -eux -o xtrace
+        
+        ln -s ~{reference_fa}
+        samtools fastq -@~{threadCount} --reference `basename ~{reference_fa}` -o ~{outprefix}.fq.gz ~{cram_file}
+    >>>
+
+    runtime {
+        docker: dockerImage
+        memory: memSizeGB + " GB"
+        cpu: threadCount
+        disks: "local-disk " + diskSizeGB + " SSD"
+        preemptible: 1
+    }
+
+    output {
+        File fastq_file = "~{outprefix}.fq.gz"
+    }
+}
 
 task yakCount {
     input{

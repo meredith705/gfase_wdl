@@ -40,12 +40,20 @@ java -jar $CROMWELL_JAR run QC/workflows/sv_evaluation.wdl -i inputs/input.tiny.
 
 ## QC - QV from short reads
 java -jar $CROMWELL_JAR run QC/workflows/base_qv_evaluation.wdl -i inputs/input.tiny.qcqv.json
+java -jar $CROMWELL_JAR run QC/workflows/base_qv_evaluation.wdl -i inputs/input.tiny.qcqv.cram.json
 ```
 
 The tiny dataset was made using the python script in [tiny_test_data](tiny_test_data):
 
 ```sh
 cd tiny_test_data
+## simulate dataset
 python3 sim_tiny_test_data.py
+
+## gzip reads
 gzip -f test_hic_1.fastq test_hic_2.fastq test_porec.fastq
+
+## make a CRAM
+bwa index ref.fa
+bwa mem ref.fa test_hic_1.fastq.gz | samtools view -C -T ref.fa > test_reads.cram
 ```
