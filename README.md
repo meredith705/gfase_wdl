@@ -27,6 +27,9 @@ Just that the WDL/commands run without an error.
 ## linked-read
 java -jar $CROMWELL_JAR run workflows/gfase.wdl -i inputs/input.tiny.linked_reads.json
 
+## porec
+java -jar $CROMWELL_JAR run workflows/gfase.wdl -i inputs/input.tiny.porec.json
+
 ## trio
 java -jar $CROMWELL_JAR run workflows/gfase.wdl -i inputs/input.tiny.trio.json
 
@@ -44,5 +47,5 @@ The tiny dataset was made using the python script in [tiny_test_data](tiny_test_
 ```sh
 cd tiny_test_data
 python3 sim_tiny_test_data.py
-gzip -f test_hic_1.fastq test_hic_2.fastq
+gzip -f test_hic_1.fastq test_hic_2.fastq test_porec.fastq
 ```

@@ -90,3 +90,57 @@ task bwaAlignment {
 
     
 }
+
+task minimap2Alignment {
+
+    input {
+        File assembly_gfa
+        File porec_file
+        Int min_mapq = 1
+        # runtime configurations
+        Int memSizeGB = 185
+        Int threadCount = 64
+        Int disk_size = 5 * round(size(porec_file, 'G')) + 50
+        String dockerImage = "meredith705/gfase:latest"
+    }
+
+    Int threadAlign = if threadCount < 16 then ceil(threadCount/2) else threadCount - 8
+    Int threadView = if threadCount < 16 then floor(threadCount/2) else 8
+    String asm_name = sub(sub(basename(assembly_gfa), '\\.gz$', ''), '\\.gfa$', '')
+    String read_name = sub(sub(sub(basename(porec_file), '\\.gz$', ''), '\\.fq$', ''), '\\.fastq$', '')
+    command <<<
+        # Set the exit code of a pipeline to that of the rightmost command
+        # to exit with a non-zero status, or zero if all commands of the pipeline exit
+        set -o pipefail
+        # cause a bash script to exit immediately when a command fails
+        set -e
+        # cause the bash shell to treat unset variables as an error and exit immediately
+        set -u
+        # echo each line of the script to stdout so we can see what is happening
+        # to turn off echo do 'set +o xtrace'
+        set -o xtrace
+
+        # turn the gfa into a fasta for alignment
+        python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa} -o ./assembly.fasta
+
+        # align with minimap2
+        minimap2 -a -x map-ont -k 17 -t ~{threadAlign} \
+                 -K 10g -I 8g \
+                 assembly.fasta \
+                 ~{porec_file} | samtools view -bh -@ ~{threadView} -q ~{min_mapq} -o ~{asm_name}.~{read_name}.bam -O BAM -
+    >>>
+
+    output {
+        File outBam = "${asm_name}.${read_name}.bam "
+    }
+
+    runtime {
+        docker: dockerImage
+        disks: "local-disk " + disk_size + " SSD"
+        memory: memSizeGB + " GB"
+        cpu: threadCount
+    }
+
+    
+}
+

@@ -18,6 +18,8 @@ N = 100000
 N_hic_reads = 1000
 hic_insert_size = 1000
 hic_read_size = 150
+N_porec_reads = 500
+porec_read_size = 500
 snp_rate = .01
 recomb_rate = .001
 kmer_size = 11
@@ -130,3 +132,16 @@ SeqIO.write([SeqRecord(MutableSeq(haps[1][:int(.9*N)]), id='contig_1')],
             "out_phase1.fa", "fasta")
 SeqIO.write([SeqRecord(MutableSeq(haps[1][int(.9*N):]), id='unphased')],
             "out_unphased.fa", "fasta")
+
+# simulate poreC data
+porec_f = open('test_porec.fastq', 'wt')
+readid = 0
+for rr in range(N_porec_reads):
+    hap = random.randint(0, 1)
+    pos = random.randint(0, N - hic_insert_size - 2*porec_read_size)
+    read = haps[hap][pos:(pos+porec_read_size)]
+    pos = pos+porec_read_size+hic_insert_size
+    read += haps[hap][pos:(pos+porec_read_size)]
+    porec_f.write('@r{}\n{}\n+\n{}\n'.format(readid, read, '~'*len(read)))
+    readid += 1
+porec_f.close()
