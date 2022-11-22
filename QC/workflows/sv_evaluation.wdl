@@ -157,7 +157,7 @@ task truvariEvaluate {
         ln -s ~{reference_fa} ref.fa
         ln -s ~{reference_fa_index} ref.fa.fai
 
-        truvari bench -b truth.vcf.gz -c call.vcf.gz -f ref.fa ~{other_args} --includebed ~{confident_bed} -o truvari_output/
+        truvari bench --no-ref a -b truth.vcf.gz -c call.vcf.gz -f ref.fa ~{other_args} --includebed ~{confident_bed} -o truvari_output/
         cp truvari_output/summary.txt summary.json
         tar -czvf truvari_output.tar.gz truvari_output
     >>>
