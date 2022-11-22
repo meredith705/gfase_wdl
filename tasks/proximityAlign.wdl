@@ -98,7 +98,7 @@ task minimap2Alignment {
         File porec_file
         Int min_mapq = 1
         # runtime configurations
-        Int memSizeGB = 128
+        Int memSizeGB = 185
         Int threadCount = 64
         Int disk_size = 5 * round(size(porec_file, 'G')) + 50
         String dockerImage = "meredith705/gfase:latest"
@@ -125,7 +125,7 @@ task minimap2Alignment {
 
         # align with minimap2
         minimap2 -a -x map-ont -k 17 -t ~{threadAlign} \
-                 -K 4g -I 8g \
+                 -K 10g -I 8g \
                  assembly.fasta \
                  ~{porec_file} | samtools view -bh -@ ~{threadView} -q ~{min_mapq} -o ~{asm_name}.~{read_name}.bam -O BAM -
     >>>
