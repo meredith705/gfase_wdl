@@ -15,7 +15,7 @@ workflow RunGfaseLinkedReadmc {
 
         # runtime configurations
         Int memSizeGB = 128
-        Int disk_size = 10 * round(size(assemblyGFA, 'G')) + round(size(bamFiles, 'G')) + 100
+        Int disk_size = 10 * round(size(assemblyGFA, 'G') + size(bamFiles, 'G')) + 100
         String dockerImage = "meredith705/gfase:latest"
     }
 
@@ -56,7 +56,7 @@ task gfase_phase_contacts_with_monte_carlo {
 
         # runtime configurations
         Int memSizeGB = 128
-        Int disk_size = 10 * round(size(assemblyGfa, 'G')) + round(size(bamFiles, 'G')) + 100
+        Int disk_size = 10 * round(size(assemblyGfa, 'G') + size(bamFiles, 'G')) + 100
         String dockerImage = "meredith705/gfase:latest"
     }
 
