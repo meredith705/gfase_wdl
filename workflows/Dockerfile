@@ -39,7 +39,7 @@ ENV PATH=/home/apps/minimap2-2.24_x64-linux/:$PATH
 RUN cd /home/apps && \
     git clone https://github.com/rlorigro/GFAse.git && \
     cd GFAse && \
-    git checkout 0848ce68160d54cd25cb5fdb09b436dae1982d79 && \
+    git checkout c819d63c4edfb30ecfb6fede0f3e3c8cf3a9b044 && \
     mkdir build && \
     cd build && \
     cmake .. && \
