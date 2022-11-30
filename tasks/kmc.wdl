@@ -65,7 +65,7 @@ task KMerCount {
         mkdir kmc_tmp
 
         # count maternal kmers
-    kmc -t~{threadCount} -k~{kmerSize} @~{matFiles} maternal.kmc kmc_tmp
+        kmc -t~{threadCount} -k~{kmerSize} @~{matFiles} maternal.kmc kmc_tmp
 
         # count paternal kmers
         kmc -t~{threadCount} -k~{kmerSize} @~{patFiles} paternal.kmc kmc_tmp
