@@ -1,0 +1,7 @@
+{
+  "QVnontrio.assemblyGfa": "tiny_test_data/test.gfa",
+  "QVnontrio.sampleReadsILMcram": ["tiny_test_data/test_reads.cram"],
+  "QVnontrio.referenceFasta": "tiny_test_data/ref.fa",
+  "QVnontrio.sampleId": "test",
+  "QVnontrio.yakCount.bloomSize": 8
+}

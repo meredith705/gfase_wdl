@@ -1,0 +1,5 @@
+{
+  "runGFAsePhase.assemblyGFA": "tiny_test_data/test.gfa",
+  "runGFAsePhase.porecFiles": ["tiny_test_data/test_porec.fastq.gz"],
+  "runGFAsePhase.minimap2Alignment.dockerImage": "jmonlong-gfase:latest"
+}

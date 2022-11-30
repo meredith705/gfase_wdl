@@ -1,5 +1,6 @@
 # gfase_wdl
-wdl workflow to run GFAse trio phasing or linked read phasing. 
+
+wdl workflow to run [GFAse](https://github.com/rlorigro/GFAse) trio phasing or linked read phasing. 
 
 Some small files to test the WDL with:
 
@@ -26,6 +27,9 @@ Just that the WDL/commands run without an error.
 ## linked-read
 java -jar $CROMWELL_JAR run workflows/gfase.wdl -i inputs/input.tiny.linked_reads.json
 
+## porec
+java -jar $CROMWELL_JAR run workflows/gfase.wdl -i inputs/input.tiny.porec.json
+
 ## trio
 java -jar $CROMWELL_JAR run workflows/gfase.wdl -i inputs/input.tiny.trio.json
 
@@ -33,12 +37,23 @@ java -jar $CROMWELL_JAR run workflows/gfase.wdl -i inputs/input.tiny.trio.json
 java -jar $CROMWELL_JAR run QC/workflows/sv_evaluation.wdl -i inputs/input.tiny.qcsv.json
 java -jar $CROMWELL_JAR run QC/workflows/sv_evaluation.wdl -i inputs/input.tiny.qcsv.gfa.json
 java -jar $CROMWELL_JAR run QC/workflows/sv_evaluation.wdl -i inputs/input.tiny.qcsv.eval.json
+
+## QC - QV from short reads
+java -jar $CROMWELL_JAR run QC/workflows/base_qv_evaluation.wdl -i inputs/input.tiny.qcqv.json
+java -jar $CROMWELL_JAR run QC/workflows/base_qv_evaluation.wdl -i inputs/input.tiny.qcqv.cram.json
 ```
 
 The tiny dataset was made using the python script in [tiny_test_data](tiny_test_data):
 
 ```sh
 cd tiny_test_data
-python3 sim_test_data.py
-gzip test_hic_1.fastq test_hic_2.fastq
+## simulate dataset
+python3 sim_tiny_test_data.py
+
+## gzip reads
+gzip -f test_hic_1.fastq test_hic_2.fastq test_porec.fastq
+
+## make a CRAM
+bwa index ref.fa
+bwa mem ref.fa test_hic_1.fastq.gz | samtools view -C -T ref.fa > test_reads.cram
 ```

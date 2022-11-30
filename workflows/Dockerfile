@@ -29,10 +29,17 @@ RUN mkdir kmc && \
     wget https://github.com/refresh-bio/KMC/releases/download/v3.2.1/KMC3.2.1.linux.tar.gz && \
     tar -xzf KMC3.2.1.linux.tar.gz
 
+WORKDIR /home/apps
+RUN wget https://github.com/lh3/minimap2/releases/download/v2.24/minimap2-2.24_x64-linux.tar.bz2 && \
+    tar -jxvf minimap2-2.24_x64-linux.tar.bz2 && \
+    rm minimap2-2.24_x64-linux.tar.bz2
+
+ENV PATH=/home/apps/minimap2-2.24_x64-linux/:$PATH
+
 RUN cd /home/apps && \
     git clone https://github.com/rlorigro/GFAse.git && \
     cd GFAse && \
-    git checkout d4f30d7842c5821700f19fd20c8b8eb9612a2c8e && \
+    git checkout c819d63c4edfb30ecfb6fede0f3e3c8cf3a9b044 && \
     mkdir build && \
     cd build && \
     cmake .. && \

@@ -1,0 +1,9 @@
+{
+  "QVnontrio.assemblyPhase0": "tiny_test_data/out_phase0.fa",
+  "QVnontrio.assemblyPhase1": "tiny_test_data/out_phase1.fa",
+  "QVnontrio.assemblyUnphased": "tiny_test_data/out_unphased.fa",
+  "QVnontrio.sampleReadsILM": ["tiny_test_data/test_hic_1.fastq.gz",
+                               "tiny_test_data/test_hic_2.fastq.gz"],
+  "QVnontrio.sampleId": "test",
+  "QVnontrio.yakCount.bloomSize": 8
+}
