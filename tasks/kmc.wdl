@@ -7,8 +7,8 @@ version 1.0
 
 workflow runKMC3 {
     input {
-        Array[String] maternalIlmnReadFiles
-        Array[String] paternalIlmnReadFiles
+        Array[File] maternalIlmnReadFiles
+        Array[File] paternalIlmnReadFiles
         Int kmerSize = 31
         # runtime configurations
         Int memSizeGB = 128
@@ -16,6 +16,8 @@ workflow runKMC3 {
         Int disk_size = 4 * round(size(maternalIlmnReadFiles, 'G')) + round(size(paternalIlmnReadFiles, 'G')) + 200
         String dockerImage = "meredith705/gfase:latest"
     }
+
+
 
     call KMerCount { 
         input:
@@ -36,8 +38,8 @@ workflow runKMC3 {
 task KMerCount {
 
     input {
-        Array[String] maternalIlmnReadFiles
-        Array[String] paternalIlmnReadFiles
+        Array[File] maternalIlmnReadFiles
+        Array[File] paternalIlmnReadFiles
         Int kmerSize = 31
         # runtime configurations
         Int memSizeGB = 128
@@ -46,8 +48,6 @@ task KMerCount {
         String dockerImage = "meredith705/gfase:latest"
     }
 
-    File matFiles = write_lines(maternalIlmnReadFiles)
-    File patFiles = write_lines(paternalIlmnReadFiles)
 
     command <<<
         # Set the exit code of a pipeline to that of the rightmost command
@@ -65,10 +65,10 @@ task KMerCount {
         mkdir kmc_tmp
 
         # count maternal kmers
-        kmc -t~{threadCount} -k~{kmerSize} @~{matFiles} maternal.kmc kmc_tmp
+        kmc -t~{threadCount} -k~{kmerSize} @~{write_lines(maternalIlmnReadFiles)} maternal.kmc kmc_tmp
 
         # count paternal kmers
-        kmc -t~{threadCount} -k~{kmerSize} @~{patFiles} paternal.kmc kmc_tmp
+        kmc -t~{threadCount} -k~{kmerSize} @~{write_lines(maternalIlmnReadFiles)} paternal.kmc kmc_tmp
 
         # subtract kmers from each other to get unique parental kmers
         kmc_tools simple paternal.kmc maternal.kmc kmers_subtract paternal.unique.kmer
