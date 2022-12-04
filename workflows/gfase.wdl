@@ -81,10 +81,10 @@ workflow runGFAsePhase {
     }
 
     output {
-        File? outputMatAssembly             = gfaseTrioPhase.outMatAssembly
-        File? outputPatAssembly             = gfaseTrioPhase.outPatAssembly
+        File? outputMatAssembly             = gfaseTrioPhase.outputMatAssembly
+        File? outputPatAssembly             = gfaseTrioPhase.outputPatAssembly
         File? outputTrioUnphasedAssembly    = gfaseTrioPhase.outputTrioUnphasedAssembly
-        File? outputPhaseChains             = gfaseTrioPhase.outPhaseChains
+        File? outputPhaseChains             = gfaseTrioPhase.outputPhaseChains
         File? outputConfig                  = gfaseLinkedRead.outputConfig
         File? outputContacts                = gfaseLinkedRead.outputContacts
         File? outputFaPhase0                = gfaseLinkedRead.outputFaPhase0 
