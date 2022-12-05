@@ -68,3 +68,9 @@ workflows:
     authors:
       - name: Jean Monlong
         email: jmonlong@ucsc.edu
+  - name: evaluate_contacts
+    subclass: WDL
+    primaryDescriptorPath: /QC/workflows/evaluate_contacts.wdl
+    authors:
+      - name: Jean Monlong
+        email: jmonlong@ucsc.edu
