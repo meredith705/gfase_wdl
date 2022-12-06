@@ -62,16 +62,16 @@ workflow evaluateContacts {
     File proxBam = select_first([bamFile, diploidBwaAlignment.outBam, diploidMinimap2Alignment.outBam])
     
     # phase the gfa using the linked read alignment
-    call evaluateContacts{
+    call evaluateContactsTask{
         input:
         bam=proxBam,
         contacts=contacts
     }
        
     output {
-		File outputTar = evaluateContacts.outputTar
-		File contactsSummary = evaluateContacts.contactsSummary
-		File phasingSummary = evaluateContacts.phasingSummary
+		File outputTar = evaluateContactsTask.outputTar
+		File contactsSummary = evaluateContactsTask.contactsSummary
+		File phasingSummary = evaluateContactsTask.phasingSummary
     }
 }
 
@@ -116,7 +116,7 @@ task mergePhasedFasta {
 }
 
 
-task evaluateContacts {
+task evaluateContactsTask {
     input {
         File bam
         File contacts
