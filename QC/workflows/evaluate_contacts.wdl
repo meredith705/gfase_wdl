@@ -62,7 +62,7 @@ workflow evaluateContacts {
     File proxBam = select_first([bamFile, diploidBwaAlignment.outBam, diploidMinimap2Alignment.outBam])
     
     # phase the gfa using the linked read alignment
-    call evaluateContactsTask{
+    call evaluateContactsTask {
         input:
         bam=proxBam,
         contacts=contacts

@@ -1,0 +1,8 @@
+{
+  "evaluateContacts.porecReads": "tiny_test_data/test_porec.fastq.gz",
+  "evaluateContacts.refHap1": "tiny_test_data/out_phase0.fa",
+  "evaluateContacts.refHap2": "tiny_test_data/out_phase1.fa",
+  "evaluateContacts.mergePhasedFasta.dockerImage": "jmonlong-gfase:latest",
+  "evaluateContacts.diploidMinimap2Alignment.dockerImage": "jmonlong-gfase:latest",
+  "evaluateContacts.evaluateContacts.dockerImage": "jmonlong-gfase:latest"
+}

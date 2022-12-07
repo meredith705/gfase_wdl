@@ -42,6 +42,9 @@ java -jar $CROMWELL_JAR run QC/workflows/sv_evaluation.wdl -i inputs/input.tiny.
 java -jar $CROMWELL_JAR run QC/workflows/base_qv_evaluation.wdl -i inputs/input.tiny.qcqv.json
 java -jar $CROMWELL_JAR run QC/workflows/base_qv_evaluation.wdl -i inputs/input.tiny.qcqv.cram.json
 
+## QC - QV from short reads using trio data
+java -jar $CROMWELL_JAR run QC/workflows/base_qv_trio_evaluation.wdl -i inputs/input.tiny.qctrio.json
+
 ## QC - Evaluate contacts
 java -jar $CROMWELL_JAR run QC/workflows/evaluate_contacts.wdl -i inputs/input.tiny.qccontacts.json
 java -jar $CROMWELL_JAR run QC/workflows/evaluate_contacts.wdl -i inputs/input.tiny.qccontacts.porec.json

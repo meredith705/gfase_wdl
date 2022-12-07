@@ -1,0 +1,9 @@
+{
+  "evaluateContacts.linkedReads1": "tiny_test_data/test_hic_1.fastq.gz",
+  "evaluateContacts.linkedReads2": "tiny_test_data/test_hic_2.fastq.gz",
+  "evaluateContacts.refHap1": "tiny_test_data/out_phase0.fa",
+  "evaluateContacts.refHap2": "tiny_test_data/out_phase1.fa",
+  "evaluateContacts.mergePhasedFasta.dockerImage": "jmonlong-gfase:latest",
+  "evaluateContacts.diploidBwaAlignment.dockerImage": "jmonlong-gfase:latest",
+  "evaluateContacts.evaluateContactsTask.dockerImage": "jmonlong-gfase:latest"
+}

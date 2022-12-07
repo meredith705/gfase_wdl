@@ -86,4 +86,63 @@ task extractAmbFromGFA {
     }
 }
 
+task convertCRAMtoFASTQ {
+    input{
+        File cram_file
+        File reference_fa
+        Int memSizeGB=4
+        Int threadCount=8
+        Int diskSizeGB= 5 * round(size(cram_file, 'G')) + 50
+        String dockerImage="quay.io/biocontainers/samtools:1.16.1--h6899075_1"
+    }
+    String outprefix = basename(cram_file, ".cram")
+    command <<<
+        set -eux -o xtrace
+        
+        ln -s ~{reference_fa}
+        samtools fastq -@~{threadCount} --reference `basename ~{reference_fa}` -o ~{outprefix}.fq.gz ~{cram_file}
+    >>>
 
+    runtime {
+        docker: dockerImage
+        memory: memSizeGB + " GB"
+        cpu: threadCount
+        disks: "local-disk " + diskSizeGB + " SSD"
+        preemptible: 1
+    }
+
+    output {
+        File fastq_file = "~{outprefix}.fq.gz"
+    }
+}
+
+task yakCount {
+    input{
+        Array[File] readFiles
+        String sampleName
+        Int bloomSize=37
+        # runtime configurations
+        Int memSizeGB=128
+        Int threadCount=16
+        Int diskSizeGB= 10 * round(size(readFiles, 'G')) + 50
+        String dockerImage="juklucas/hpp_yak:latest"
+    }
+    command <<<
+        set -eux -o xtrace
+
+        # Kmer counting with https://github.com/lh3/yak.
+        yak count -t~{threadCount} -b~{bloomSize} -o ~{sampleName}.yak <(zcat ~{sep=" " readFiles}) <(zcat ~{sep=" " readFiles})
+    >>>
+
+    runtime {
+        docker: dockerImage
+        memory: memSizeGB + " GB"
+        cpu: threadCount
+        disks: "local-disk " + diskSizeGB + " SSD"
+        preemptible: 1
+    }
+
+    output {
+        File yakCount = "~{sampleName}.yak"
+    }
+}

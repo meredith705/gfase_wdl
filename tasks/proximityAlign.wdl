@@ -132,7 +132,7 @@ task diploidBwaAlignment {
     >>>
 
     output {
-        File outBam = "${ref_name}.${read_name}.bam "
+        File outBam = "${ref_name}.${read_name}.bam"
     }
 
     runtime {
@@ -183,7 +183,7 @@ task minimap2Alignment {
     >>>
 
     output {
-        File outBam = "${asm_name}.${read_name}.bam "
+        File outBam = "${asm_name}.${read_name}.bam"
     }
 
     runtime {
