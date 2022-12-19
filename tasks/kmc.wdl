@@ -23,6 +23,7 @@ workflow runKMC3 {
         input:
             maternalIlmnReadFiles = maternalIlmnReadFiles,
             paternalIlmnReadFiles = paternalIlmnReadFiles,
+            kmerSize = kmerSize,
             memSizeGB = memSizeGB,
             threadCount = threadCount,
             disk_size = disk_size,
@@ -68,7 +69,7 @@ task KMerCount {
         kmc -t~{threadCount} -k~{kmerSize} @~{write_lines(maternalIlmnReadFiles)} maternal.kmc kmc_tmp
 
         # count paternal kmers
-        kmc -t~{threadCount} -k~{kmerSize} @~{write_lines(maternalIlmnReadFiles)} paternal.kmc kmc_tmp
+        kmc -t~{threadCount} -k~{kmerSize} @~{write_lines(paternalIlmnReadFiles)} paternal.kmc kmc_tmp
 
         # subtract kmers from each other to get unique parental kmers
         kmc_tools simple paternal.kmc maternal.kmc kmers_subtract paternal.unique.kmer
