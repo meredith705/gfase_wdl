@@ -1,0 +1,15 @@
+{
+  "QVtrio.assemblyPhase0": "tiny_test_data/out_phase0.fa",
+  "QVtrio.assemblyPhase1": "tiny_test_data/out_phase1.fa",
+  "QVtrio.assemblyUnphased": "tiny_test_data/out_unphased.fa",
+  "QVtrio.sampleReadsILM": ["tiny_test_data/test_hic_1.fastq.gz",
+                            "tiny_test_data/test_hic_2.fastq.gz"],
+  "QVtrio.maternalReadsILM": ["tiny_test_data/test_hic_1.fastq.gz",
+                            "tiny_test_data/test_hic_2.fastq.gz"],
+  "QVtrio.paternalReadsILM": ["tiny_test_data/test_hic_1.fastq.gz",
+                            "tiny_test_data/test_hic_2.fastq.gz"],
+  "QVtrio.sampleId": "test",
+  "QVtrio.yakCount.bloomSize": 8,
+  "QVtrio.yakCountMaternal.bloomSize": 8,
+  "QVtrio.yakCountPaternal.bloomSize": 8
+}
