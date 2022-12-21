@@ -72,16 +72,16 @@ task KMerCount {
         kmc -t~{threadCount} -k~{kmerSize} @~{write_lines(paternalIlmnReadFiles)} paternal.kmc kmc_tmp
 
         # subtract kmers from each other to get unique parental kmers
-        kmc_tools simple paternal.kmc maternal.kmc kmers_subtract paternal.unique.kmer
         kmc_tools simple maternal.kmc paternal.kmc kmers_subtract maternal.unique.kmer
-
-        # paternal kmer file in to fasta files
-        kmc_tools transform paternal.unique.kmer dump paternal.dump.txt
-        awk 'BEGIN {OFS="_"}{msg=">pat"}{print msg,NR"\n"$1}' paternal.dump.txt > paternal.fa
+        kmc_tools simple paternal.kmc maternal.kmc kmers_subtract paternal.unique.kmer
 
         # maternal kmer file in to fasta files
         kmc_tools transform maternal.unique.kmer dump maternal.dump.txt
         awk 'BEGIN {OFS="_"}{msg=">mat"}{print msg,NR"\n"$1}' maternal.dump.txt > maternal.fa
+
+        # paternal kmer file in to fasta files
+        kmc_tools transform paternal.unique.kmer dump paternal.dump.txt
+        awk 'BEGIN {OFS="_"}{msg=">pat"}{print msg,NR"\n"$1}' paternal.dump.txt > paternal.fa
 
     >>>
 

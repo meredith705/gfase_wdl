@@ -14,8 +14,8 @@ workflow runGFAsePhase {
     input {
         File assemblyGFA                            # Input assembly GFA file from assembler
         #### trio data input ########
-        File? patKmerFile                           # Input Fasta file of paternal kmers ( eg. made with KMC3 )
-        File? matKmerFile                           # Input Fasta file of maternal kmers ( eg. made with KMC3 )
+        Array[File] patIlmnFiles = []               # Input array of parental fasta files 
+        Array[File] matIlmnFiles = []               # Input array of marental fasta files 
         Int kmsize = 31                             # Size of kmers in the input files
         #### linked read input ########
         Array[File] linkedRead1Files = []              # Input array of read1 fastq files from a set of paired linked reads
@@ -67,13 +67,13 @@ workflow runGFAsePhase {
     }
     
     # otherwise trio-phasing based on kmers
-    if (defined(patKmerFile) && defined(matKmerFile)){
+    if (length(patIlmnFiles) > 0 && length(matIlmnFiles) > 0){
         # trio phase gfa
         call gfaseTrio.RunGFAseTrioPhase as gfaseTrioPhase {
             input:
                 assemblyGfa         = assemblyGFA,
-                patKmerFa           = patKmerFile,
-                matKmerFa           = matKmerFile,
+                patKmerFa           = patIlmnFiles,
+                matKmerFa           = matIlmnFiles,
                 kSize               = kmsize,
                 dockerImage         = dockerImage
         }

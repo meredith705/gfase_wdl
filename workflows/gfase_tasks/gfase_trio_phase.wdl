@@ -5,25 +5,36 @@ version 1.0
 ## mmmeredi@ucsc.edu
 ## 2022-08-01
 
+import "../../tasks/kmc.wdl" as kmc_t
+
 workflow RunGFAseTrioPhase {
     input {
         File assemblyGfa                         # gfa from Shasta/verrko
-        File? patKmerFa                          # paternal file
-        File? matKmerFa                          # maternal file
+        Array[File] patKmerFa                    # array of paternal files
+        Array[File] matKmerFa                    # array of maternal files
         Int kSize = 31                           # kmer size for parents and child
 
         # runtime configurations
         Int memSizeGB = 128
-        Int disk_size = 10 * round(size(assemblyGfa, 'G')) + round(size(patKmerFa, 'G')) + + round(size(matKmerFa, 'G')) + 100
+        Int disk_size = 10 * round(size(assemblyGfa, 'G')) + 2 * round(size(patKmerFa, 'G')) + 2 * round(size(matKmerFa, 'G')) + 100
         String dockerImage = "meredith705/gfase:latest"
     }
 
-    # phase the gfa using the linked read alignment
+
+    # turn the fastas into kmers for phasing 
+    call kmc_t.KMerCount {
+        input:
+            maternalIlmnReadFiles = matKmerFa,
+            paternalIlmnReadFiles = patKmerFa,
+            kmerSize              = kSize
+    }
+
+    # phase the gfa using the parental kmers
     call gfaseTrioPhase {
         input:
             assemblyGfa         = assemblyGfa,
-            patKmerFa           = patKmerFa,
-            matKmerFa           = matKmerFa,
+            patKmers           = KMerCount.paternalFasta,
+            matKmers           = KMerCount.maternalFasta,
             kSize               = kSize,
             dockerImage         = dockerImage
         }
@@ -42,13 +53,13 @@ task gfaseTrioPhase {
     input {
         File assemblyGfa
         # trio parameters
-        File? patKmerFa 
-        File? matKmerFa
+        File patKmers 
+        File matKmers
         Int kSize = 0
         # runtime configurations
         Int memSizeGB = 128
         Int threadCount = 1
-        Int disk_size = 4 * round(size(assemblyGfa, 'G')) + round(size(patKmerFa, 'G')) + round(size(matKmerFa, 'G')) + 100
+        Int disk_size = 4 * round(size(assemblyGfa, 'G')) + round(size(patKmers, 'G')) + round(size(matKmers, 'G')) + 100
         String dockerImage = "meredith705/gfase:latest"
     }
     command <<<
@@ -67,8 +78,8 @@ task gfaseTrioPhase {
         phase_haplotype_paths \
         -k ~{kSize} \
         -i ~{assemblyGfa} \
-        -p ~{patKmerFa} \
-        -m ~{matKmerFa} \
+        -p ~{patKmers} \
+        -m ~{matKmers} \
         -o gfase
         
         echo done >> log.txt
