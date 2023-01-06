@@ -149,11 +149,12 @@ task minimap2Alignment {
         File assembly_gfa
         File porec_file
         Int min_mapq = 1
+        String minimap2_args = "-a -x map-ont -k 17 -K 10g -I 8g"
         # runtime configurations
         Int memSizeGB = 185
         Int threadCount = 64
         Int disk_size = 5 * round(size(porec_file, 'G')) + 50
-        String dockerImage = "meredith705/gfase:latest"
+        String dockerImage = "quay.io/jmonlong/gfase:d4f30d-porec"
     }
 
     Int threadAlign = if threadCount < 16 then ceil(threadCount/2) else threadCount - 8
@@ -176,8 +177,8 @@ task minimap2Alignment {
         python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa} -o ./assembly.fasta
 
         # align with minimap2
-        minimap2 -a -x map-ont -k 17 -t ~{threadAlign} \
-                 -K 10g -I 8g \
+        minimap2 ~{minimap2_args} \
+                 -t ~{threadAlign} \
                  assembly.fasta \
                  ~{porec_file} | samtools view -bh -@ ~{threadView} -q ~{min_mapq} -o ~{asm_name}.~{read_name}.bam -O BAM -
     >>>
@@ -202,11 +203,12 @@ task diploidMinimap2Alignment {
         File haps_fasta
         File porec_file
         Int min_mapq = 1
+        String minimap2_args = "-a -x map-ont -k 17 -K 10g -I 8g"
         # runtime configurations
         Int memSizeGB = 185
         Int threadCount = 64
         Int disk_size = 5 * round(size(porec_file, 'G')) + 50
-        String dockerImage = "meredith705/gfase:latest"
+        String dockerImage = "quay.io/jmonlong/gfase:d4f30d-porec"
     }
 
     Int threadAlign = if threadCount < 16 then ceil(threadCount/2) else threadCount - 8
@@ -226,10 +228,11 @@ task diploidMinimap2Alignment {
         set -o xtrace
       
         # align with minimap2
-        minimap2 -a -x map-ont -k 17 -t ~{threadAlign} \
-                 -K 10g -I 8g \
+        minimap2 ~{minimap2_args} \
+                 -t ~{threadAlign} \
                  ~{haps_fasta} \
                  ~{porec_file} | samtools view -bh -@ ~{threadView} -q ~{min_mapq} -o ~{ref_name}.~{read_name}.bam -O BAM -
+
     >>>
 
     output {
