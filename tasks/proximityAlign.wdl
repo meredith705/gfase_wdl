@@ -149,9 +149,9 @@ task minimap2Alignment {
         File assembly_gfa
         File porec_file
         Int min_mapq = 1
-        String minimap2_args = "-a -x map-ont -k 17 -K 10g -I 8g"
+        String minimap2_args = "-a -x map-ont -k 17 -K 3g -I 8g"
         # runtime configurations
-        Int memSizeGB = 185
+        Int memSizeGB = 128
         Int threadCount = 64
         Int disk_size = 5 * round(size(porec_file, 'G')) + 50
         String dockerImage = "quay.io/jmonlong/gfase:d4f30d-porec"
