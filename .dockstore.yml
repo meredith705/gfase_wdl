@@ -7,6 +7,13 @@ workflows:
       - name: Melissa Meredith
         email: mmmeredi@ucsc.edu
         orcid: 0000-0001-5736-3193
+  - name: gfaseTrioWorkflow
+    subclass: WDL
+    primaryDescriptorPath: /workflows/gfaseTrio.wdl
+    authors:
+      - name: Melissa Meredith
+        email: mmmeredi@ucsc.edu
+        orcid: 0000-0001-5736-3193
   - name: bwa-mem2-gfa
     subclass: WDL
     primaryDescriptorPath: /tasks/bwa-mem2.wdl
