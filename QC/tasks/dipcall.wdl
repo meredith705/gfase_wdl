@@ -3,9 +3,9 @@ version 1.0
 workflow runDipcall {
     call dipcall
     output {
-        File dipcall.outputTarball = glob("*.dipcall.tar.gz")[0]
-        File dipcall.outputVCF = glob("*.dipcall.vcf.gz")[0]
-        File dipcall.outputBED = glob("*.dipcall.bed")[0]
+        File dipcall.outputTarball
+        File dipcall.outputVCF
+        File dipcall.outputBED
     }
 
 }
