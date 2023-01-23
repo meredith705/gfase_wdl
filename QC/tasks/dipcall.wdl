@@ -1,11 +1,29 @@
 version 1.0
 
 workflow runDipcall {
-    call dipcall
+
+    input {
+        File assemblyFastaPat
+        File assemblyFastaMat
+        File referenceFasta
+        Boolean isMaleSample
+        Boolean referenceIsHS38 = true
+        String dockerImage = "humanpangenomics/hpp_dipcall_v0.3:latest"
+    }
+
+    call dipcall{
+        input:
+            assemblyFastaPat = assemblyFastaPat,
+            assemblyFastaMat = assemblyFastaMat,
+            referenceFasta = referenceFasta,
+            isMaleSample = isMaleSample,
+            referenceIsHS38 = referenceIsHS38
+    }
+ 
     output {
-        File dipcall.outputTarball
-        File dipcall.outputVCF
-        File dipcall.outputBED
+        File outputTarball = dipcall.outputTarball
+        File outputVCF = dipcall.outputVCF
+        File outputBED = dipcall.outputBED
     }
 
 }
