@@ -49,6 +49,11 @@ workflows:
       - name: Melissa Meredith
         email: mmmeredi@ucsc.edu
         orcid: 0000-0001-5736-3193
+  - name: dipcall
+    subclass: WDL
+    primaryDescriptorPath: /QC/tasks/dipcall.wdl
+    authors:
+      - name: HPRC
   - name: whatshapCompare
     subclass: WDL
     primaryDescriptorPath: /QC/tasks/whatshap.wdl
