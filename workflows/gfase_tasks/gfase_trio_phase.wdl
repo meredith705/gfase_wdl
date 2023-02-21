@@ -61,6 +61,7 @@ task gfaseTrioPhase {
         Int threadCount = 1
         Int disk_size = 4 * round(size(assemblyGfa, 'G')) + round(size(patKmers, 'G')) + round(size(matKmers, 'G')) + 100
         String dockerImage = "meredith705/gfase:latest"
+        Int preemptible = 2
     }
     command <<<
         # Set the exit code of a pipeline to that of the rightmost command
@@ -90,6 +91,7 @@ task gfaseTrioPhase {
         disks: "local-disk " + disk_size + " SSD"
         memory: memSizeGB + " GB"
         cpu: threadCount
+        preemptible: preemptible
     }
 
     output {

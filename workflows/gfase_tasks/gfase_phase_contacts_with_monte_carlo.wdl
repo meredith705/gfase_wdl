@@ -58,6 +58,7 @@ task gfase_phase_contacts_with_monte_carlo {
         Int memSizeGB = 128
         Int disk_size = 10 * round(size(assemblyGfa, 'G') + size(bamFiles, 'G')) + 100
         String dockerImage = "meredith705/gfase:latest"
+        Int preemptible = 1
     }
 
     command <<<
@@ -87,6 +88,7 @@ task gfase_phase_contacts_with_monte_carlo {
         disks: "local-disk " + disk_size + " SSD"
         memory: memSizeGB + " GB"
         cpu: threadCount
+        preemptible: preemptible
     }
 
     output {

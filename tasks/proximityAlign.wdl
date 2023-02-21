@@ -48,6 +48,7 @@ task bwaAlignment {
         Int threadCount = 64
         Int disk_size = 15 * round(size(linked_read_fasta_1, 'G') + size(linked_read_fasta_2, 'G')) + 50
         String dockerImage = "meredith705/gfase:latest"
+        Int preemptible = 3
     }
 
     Int threadBwa = if threadCount < 16 then ceil(threadCount/2) else threadCount - 8
@@ -86,6 +87,7 @@ task bwaAlignment {
         disks: "local-disk " + disk_size + " SSD"
         memory: memSizeGB + " GB"
         cpu: threadCount
+        preemptible: preemptible
     }
 
     
@@ -103,6 +105,7 @@ task diploidBwaAlignment {
         Int threadCount = 64
         Int disk_size = 15 * round(size(linked_read_fasta_1, 'G') + size(linked_read_fasta_2, 'G')) + 50
         String dockerImage = "meredith705/gfase:latest"
+        Int preemptible = 3
     }
 
     Int threadBwa = if threadCount < 16 then ceil(threadCount/2) else threadCount - 8
@@ -140,6 +143,7 @@ task diploidBwaAlignment {
         disks: "local-disk " + disk_size + " SSD"
         memory: memSizeGB + " GB"
         cpu: threadCount
+        preemptible: preemptible
     }    
 }
 
@@ -155,6 +159,7 @@ task minimap2Alignment {
         Int threadCount = 64
         Int disk_size = 5 * round(size(porec_file, 'G')) + 50
         String dockerImage = "quay.io/jmonlong/gfase:d4f30d-porec"
+        Int preemptible = 3
     }
 
     Int threadAlign = if threadCount < 16 then ceil(threadCount/2) else threadCount - 8
@@ -192,6 +197,7 @@ task minimap2Alignment {
         disks: "local-disk " + disk_size + " SSD"
         memory: memSizeGB + " GB"
         cpu: threadCount
+        preemptible: preemptible
     }
 
     
@@ -209,6 +215,7 @@ task diploidMinimap2Alignment {
         Int threadCount = 64
         Int disk_size = 5 * round(size(porec_file, 'G')) + 50
         String dockerImage = "quay.io/jmonlong/gfase:d4f30d-porec"
+        Int preemptible = 3
     }
 
     Int threadAlign = if threadCount < 16 then ceil(threadCount/2) else threadCount - 8
@@ -244,6 +251,7 @@ task diploidMinimap2Alignment {
         disks: "local-disk " + disk_size + " SSD"
         memory: memSizeGB + " GB"
         cpu: threadCount
+        preemptible: preemptible
     }
 
     

@@ -47,6 +47,7 @@ task KMerCount {
         Int threadCount = 20
         Int disk_size = 4 * round(size(maternalIlmnReadFiles, 'G')) + round(size(paternalIlmnReadFiles, 'G')) + 200
         String dockerImage = "meredith705/gfase:latest"
+        Int preemptible = 3
     }
 
 
@@ -90,6 +91,7 @@ task KMerCount {
         disks: "local-disk " + disk_size + " SSD"
         memory: memSizeGB + " GB"
         cpu: threadCount
+        preemptible: preemptible
     }
 
     output {
