@@ -1,7 +1,6 @@
 {
-  "runGFAsePhase.matKmerFile": "/public/groups/vg/memeredith/czi/hg002/kmc_trio_dbs/ill_k31_hethom_20211210/hg04.k31.het_hom.17-71.unique.fa",
-  "runGFAsePhase.trio_phase": true,
   "runGFAsePhase.kmsize": 31,
-  "runGFAsePhase.assemblyGFA": "test_data/run14_uul_test_subset.gfa",
-  "runGFAsePhase.patKmerFile": "/public/groups/vg/memeredith/czi/hg002/kmc_trio_dbs/ill_k31_hethom_20211210/hg03.k31.het_hom_14-62.unique.fa"
+  "runGFAsePhase.assemblyGFA": "test.gfa",
+  "runGFAsePhase.patIlmnFiles": ["test.0.fq"],
+  "runGFAsePhase.matIlmnFiles": ["test.1.fq"]
 }
