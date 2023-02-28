@@ -79,7 +79,7 @@ Paired reads are input as 2 arrays, one array for read 1 files and a second arra
   "runGFAsePhase.minimap2Alignment.dockerImage": "jmonlong-gfase:latest"
 }
 ```
-- Parental short reads
+- Parental short reads ([json_link](https://github.com/meredith705/gfase_wdl/blob/main/inputs/gfase.trio.inputs.json))
 ```
 {
   "runGFAsePhase.kmsize": 31,
