@@ -16,7 +16,7 @@ Linked read inputs are aligned to the input assembly and used to phase GFA compo
 Output files vary depending on which type of files are given as input. 
 - HiC linked reads and PoreC: 
 `phase0.fasta, phase1.fasta, unphased.fasta, and other files pertaining to chaining and alignment contacts.`
-- Parental short reads (Illumina) 
+- Parental short reads (Illumina):
 `maternal.fasta, paternal.fasta, unphased.fasta, and chaining file`
 
 # Dependencies
