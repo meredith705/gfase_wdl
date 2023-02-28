@@ -84,8 +84,8 @@ Paired reads are input as 2 arrays, one array for read 1 files and a second arra
 {
   "runGFAsePhase.kmsize": 31,
   "runGFAsePhase.assemblyGFA": "tiny_test_data/test.gfa",
-  "runGFAsePhase.patIlmnFiles": ["tiny_test_data/test.0.fq"],
-  "runGFAsePhase.matIlmnFiles": ["tiny_test_data/test.1.fq"]
+  "runGFAsePhase.patIlmnFiles": ["tiny_test_data/test.pat.fq"],
+  "runGFAsePhase.matIlmnFiles": ["tiny_test_data/test.mat.fq"]
 }
 ```
 
