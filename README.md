@@ -128,7 +128,7 @@ cd tiny_test_data
 python3 sim_tiny_test_data.py
 
 ## gzip reads
-gzip -f test_hic_1.fastq test_hic_2.fastq test_porec.fastq
+gzip -f test_hic_1.fastq test_hic_2.fastq test_porec.fastq test.pat.fq test.mat.fq
 
 ## make a CRAM
 bwa index ref.fa

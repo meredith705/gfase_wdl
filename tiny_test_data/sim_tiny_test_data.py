@@ -18,6 +18,8 @@ N = 100000
 N_hic_reads = 1000
 hic_insert_size = 1000
 hic_read_size = 150
+N_par_reads = 5000
+par_read_size = 150
 N_porec_reads = 500
 porec_read_size = 500
 snp_rate = .01
@@ -95,35 +97,23 @@ hic_f1.close()
 hic_f2.close()
 
 # get unique parent kmers
-kmers = [{}, {}]
-for pos in range(N-kmer_size):
-    for par in range(2):
-        for phap in range(2):
-            kmers[par][str(parents[par][phap][pos:(pos+kmer_size)])] = True
-# select unique ones
-uniq_kmers = [[], []]
-for km in kmers[0]:
-    if km not in kmers[1]:
-        uniq_kmers[0].append(km)
-for km in kmers[1]:
-    if km not in kmers[0]:
-        uniq_kmers[1].append(km)
-# sort them
-uniq_kmers[0].sort()
-uniq_kmers[1].sort()
-# write fasta
-km_f1 = open('test_kmers_pat.fa', 'wt')
-kmid = 0
-for km in uniq_kmers[0]:
-    km_f1.write('>{}\n{}\n'.format(kmid, km))
-    kmid += 1
-km_f1.close()
-km_f2 = open('test_kmers_mat.fa', 'wt')
-kmid = 0
-for km in uniq_kmers[1]:
-    km_f2.write('>{}\n{}\n'.format(kmid, km))
-    kmid += 1
-km_f2.close()
+pat_f = open('test.pat.fq', 'wt')
+mat_f = open('test.mat.fq', 'wt')
+readid = 0
+for rr in range(N_par_reads):
+    hap = random.randint(0, 1)
+    pos = random.randint(0, N - par_read_size)
+    read = parents[0][hap][pos:(pos+par_read_size)]
+    pat_f.write('@r{}_pat\n{}\n+\n{}\n'.format(readid, read,
+                                               '~'*par_read_size))
+    hap = random.randint(0, 1)
+    pos = random.randint(0, N - par_read_size)
+    read = parents[1][hap][pos:(pos+par_read_size)]
+    mat_f.write('@r{}_mat\n{}\n+\n{}\n'.format(readid, read,
+                                               '~'*par_read_size))
+    readid += 1
+pat_f.close()
+mat_f.close()
 
 # simulate gfase outputs
 SeqIO.write([SeqRecord(MutableSeq(haps[0][:int(.9*N)]), id='contig_0')],
