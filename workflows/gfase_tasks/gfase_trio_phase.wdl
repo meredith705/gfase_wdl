@@ -16,7 +16,6 @@ workflow RunGFAseTrioPhase {
 
         # runtime configurations
         Int memSizeGB = 128
-        Int disk_size = 10 * round(size(assemblyGfa, 'G')) + 2 * round(size(patKmerFa, 'G')) + 2 * round(size(matKmerFa, 'G')) + 100
         String dockerImage = "meredith705/gfase:latest"
     }
 
@@ -26,8 +25,9 @@ workflow RunGFAseTrioPhase {
         input:
             maternalIlmnReadFiles = matKmerFa,
             paternalIlmnReadFiles = patKmerFa,
-            kmerSize              = kSize
-    }
+            kmerSize              = kSize,
+        memSizeGB=memSizeGB
+}
 
     # phase the gfa using the parental kmers
     call gfaseTrioPhase {
@@ -36,7 +36,8 @@ workflow RunGFAseTrioPhase {
             patKmers           = KMerCount.paternalFasta,
             matKmers           = KMerCount.maternalFasta,
             kSize               = kSize,
-            dockerImage         = dockerImage
+            dockerImage         = dockerImage,
+        memSizeGB=memSizeGB
         }
 
     output {

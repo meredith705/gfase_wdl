@@ -50,7 +50,8 @@ task KMerCount {
         Int preemptible = 3
     }
 
-
+    ## to reduce memory allocated by KMC based on specified instance/local memory
+    Int kmcMaxMem = if memSizeGB < 12 then memSizeGB else 12
     command <<<
         # Set the exit code of a pipeline to that of the rightmost command
         # to exit with a non-zero status, or zero if all commands of the pipeline exit
@@ -67,10 +68,10 @@ task KMerCount {
         mkdir kmc_tmp
 
         # count maternal kmers
-        kmc -t~{threadCount} -k~{kmerSize} @~{write_lines(maternalIlmnReadFiles)} maternal.kmc kmc_tmp
+        kmc -t~{threadCount} -k~{kmerSize} -m~{kmcMaxMem} @~{write_lines(maternalIlmnReadFiles)} maternal.kmc kmc_tmp
 
         # count paternal kmers
-        kmc -t~{threadCount} -k~{kmerSize} @~{write_lines(paternalIlmnReadFiles)} paternal.kmc kmc_tmp
+        kmc -t~{threadCount} -k~{kmerSize} -m~{kmcMaxMem} @~{write_lines(paternalIlmnReadFiles)} paternal.kmc kmc_tmp
 
         # subtract kmers from each other to get unique parental kmers
         kmc_tools simple maternal.kmc paternal.kmc kmers_subtract maternal.unique.kmer

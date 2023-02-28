@@ -1,7 +1,8 @@
 {
   "runGFAsePhase.assemblyGFA": "tiny_test_data/test.gfa",
-  "runGFAsePhase.patKmerFile": "tiny_test_data/test.pat.fq", 
-  "runGFAsePhase.matKmerFile": "tiny_test_data/test.mat.fq",
-  "runGFAsePhase.kmsize": 31
+  "runGFAsePhase.patIlmnFiles": ["tiny_test_data/test.pat.fq.gz"], 
+  "runGFAsePhase.matIlmnFiles": ["tiny_test_data/test.mat.fq.gz"],
+  "runGFAsePhase.kmsize": 31,
+  "runGFAsePhase.gfaseTrioPhase.memSizeGB": 2
 }
 
