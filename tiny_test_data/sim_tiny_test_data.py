@@ -96,7 +96,7 @@ for rr in range(N_hic_reads):
 hic_f1.close()
 hic_f2.close()
 
-# get unique parent kmers
+# simulate parent short reads
 pat_f = open('test.pat.fq', 'wt')
 mat_f = open('test.mat.fq', 'wt')
 readid = 0
