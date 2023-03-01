@@ -62,7 +62,7 @@ java -jar womtool-85.jar inputs workflows/gfase.wdl > inputs.json
 The only input documented as 'required' is the `assemblyGFA` however one of the three phasing input data types is actually required to perform any phasing. 
 Input fields for each of the three input data types are as follows: 
 - HiC linked reads ([json_link](https://github.com/meredith705/gfase_wdl/blob/main/inputs/input.tiny.linked_reads.json))
-Paired reads are input as 2 arrays, one array for read 1 files and a second array for read 2 files. Both arrays should be have the same ordering, so that read pairs are aligned together. 
+Paired reads are input as 2 arrays, one array for read 1 files and a second array for read 2 files. Both arrays should have the same ordering, so that read pairs are aligned together. 
 ```
 {
   "runGFAsePhase.assemblyGFA": "tiny_test_data/test.gfa",
@@ -89,8 +89,8 @@ Paired reads are input as 2 arrays, one array for read 1 files and a second arra
 }
 ```
 
-A tiny dataset was made to help debug the WDL.
-It's not supposed to be test if the output is correct. 
+Cromwell is used to run the workflow using the respective inputs json file. If `CROMWELL_JAR` is the path to the cromwell jar file example commands are below.
+A tiny dataset was made to help debug the WDL, it's not supposed to be test if the output is correct. 
 It is intended to ensure that the WDL/commands run without an error.
 
 ```sh
