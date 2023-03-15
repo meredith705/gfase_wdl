@@ -93,6 +93,7 @@ workflow runGFAsePhase {
         File? outputUnzipGFA                = gfaseLinkedRead.outputUnzipGFA
         File? outputChainedGFA              = gfaseLinkedRead.outputChainedGFA
         File? outputLRFaUnphased            = gfaseLinkedRead.outputFaUnphased
+        Array[File]? outputLinkedReadBam    = proxBam
     }
 
 }
