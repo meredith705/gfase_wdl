@@ -75,8 +75,6 @@ Paired reads are input as 2 arrays, one array for read 1 files and a second arra
 ```{
   "runGFAsePhase.assemblyGFA": "tiny_test_data/test.gfa",
   "runGFAsePhase.porecFiles": ["tiny_test_data/test_porec.fastq.gz"],
-  # TODO: replace with melissa's gfase docker
-  "runGFAsePhase.minimap2Alignment.dockerImage": "jmonlong-gfase:latest"
 }
 ```
 - Parental short reads ([json_link](https://github.com/meredith705/gfase_wdl/blob/main/inputs/gfase.trio.inputs.json))

@@ -158,7 +158,7 @@ task minimap2Alignment {
         Int memSizeGB = 128
         Int threadCount = 64
         Int disk_size = 5 * round(size(porec_file, 'G')) + 50
-        String dockerImage = "quay.io/jmonlong/gfase:d4f30d-porec"
+        String dockerImage = "meredith705/gfase:latest"
         Int preemptible = 3
     }
 
@@ -214,7 +214,7 @@ task diploidMinimap2Alignment {
         Int memSizeGB = 185
         Int threadCount = 64
         Int disk_size = 5 * round(size(porec_file, 'G')) + 50
-        String dockerImage = "quay.io/jmonlong/gfase:d4f30d-porec"
+        String dockerImage = "meredith705/gfase:latest"
         Int preemptible = 3
     }
 
