@@ -1,6 +1,0 @@
-{
-  "runGFAsePhase.kmsize": 31,
-  "runGFAsePhase.assemblyGFA": "test.gfa",
-  "runGFAsePhase.patIlmnFiles": ["test.0.fq"],
-  "runGFAsePhase.matIlmnFiles": ["test.1.fq"]
-}
