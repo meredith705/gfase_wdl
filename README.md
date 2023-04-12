@@ -72,7 +72,8 @@ Paired reads are input as 2 arrays, one array for read 1 files and a second arra
 }  
 ```
 - PoreC ([json_link](https://github.com/meredith705/gfase_wdl/blob/main/inputs/input.tiny.porec.json))
-```{
+```
+{
   "runGFAsePhase.assemblyGFA": "tiny_test_data/test.gfa",
   "runGFAsePhase.porecFiles": ["tiny_test_data/test_porec.fastq.gz"],
 }
