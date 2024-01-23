@@ -22,6 +22,8 @@ workflow runGFAsePhase {
         Array[File] linkedRead2Files = []              # Input array of read2 fastq files from a set of paired linked reads
         #### porec input
         Array[File] porecFiles = []                           # Input array of fastq files from poreC experiments
+        #### contact input csv
+        File? contact_csv
         String dockerImage = "meredith705/gfase:latest" 
     }
 
@@ -55,7 +57,7 @@ workflow runGFAsePhase {
             }
         }
         
-        Array[File] proxBam = select_first([bwaAlignment.outBam, minimap2Alignment.outBam])
+        Array[File] proxBam = select_first([contact_csv, bwaAlignment.outBam, minimap2Alignment.outBam])
 
         # phase the gfa using the linked read alignment
         call gfaseLR.RunGfaseLinkedReadmc as gfaseLinkedRead{
