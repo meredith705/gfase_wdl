@@ -1,6 +1,6 @@
 version 1.0
 
-## bwa-mem2 aligner WDL for gfase proximity linked read alignment 
+## bwa mem aligner WDL for gfase proximity linked read alignment
 ## Maintainer: Melissa Meredith 
 ## mmmeredi@ucsc.edu
 ## 2022-08-01
@@ -71,8 +71,8 @@ task bwaAlignment {
         python3 /home/apps/GFAse/scripts/gfa_to_fasta.py -i ~{assembly_gfa} -o ./assembly.fasta
 
         # index, align, and sort reads to assembly
-        bwa-mem2 index assembly.fasta
-        bwa-mem2 mem -t ~{threadBwa} -5 -S -P assembly.fasta \
+        bwa index assembly.fasta
+        bwa mem -t ~{threadBwa} -5 -S -P assembly.fasta \
                  ~{linked_read_fasta_1} ~{linked_read_fasta_2} | \
             samtools view -h -q ~{min_mapq} - | \
             samtools sort -n -@ ~{threadSort} - -O BAM -o ~{asm_name}.~{read_name}.bam 
@@ -127,8 +127,8 @@ task diploidBwaAlignment {
         ln -s ~{haps_fasta} ref.fasta
         
         # index, align, and sort reads to assembly
-        bwa-mem2 index ref.fasta
-        bwa-mem2 mem -t ~{threadBwa} -5 -S -P ref.fasta \
+        bwa index ref.fasta
+        bwa mem -t ~{threadBwa} -5 -S -P ref.fasta \
                  ~{linked_read_fasta_1} ~{linked_read_fasta_2} | \
             samtools view -h -q ~{min_mapq} - | \
             samtools sort -n -@ ~{threadSort} - -O BAM -o ~{ref_name}.~{read_name}.bam 

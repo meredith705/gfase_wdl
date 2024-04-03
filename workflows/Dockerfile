@@ -20,8 +20,11 @@ RUN wget https://github.com/samtools/samtools/releases/download/1.15.1/samtools-
     make
 
 WORKDIR /home/apps
-RUN wget https://github.com/bwa-mem2/bwa-mem2/releases/download/v2.2.1/bwa-mem2-2.2.1_x64-linux.tar.bz2 && \
-    tar -jxf bwa-mem2-2.2.1_x64-linux.tar.bz2
+RUN cd /home/apps && \
+    git clone https://github.com/lh3/bwa.git && \
+    cd bwa && \
+    git checkout 139f68fc4c3747813783a488aef2adc86626b01b && \
+    make
 
 WORKDIR /home/apps
 RUN mkdir kmc && \
@@ -48,7 +51,7 @@ ENV PATH="/home/apps/GFAse/build:${PATH}"
 ENV PATH="/home/apps/GFAse/data:${PATH}"
 ENV PATH="/home/apps/GFAse/scripts:${PATH}"
 ENV PATH="/home/apps/samtools-1.15.1:${PATH}"
-ENV PATH="/home/apps/bwa-mem2-2.2.1_x64-linux:${PATH}"
+ENV PATH="/home/apps/bwa:${PATH}"
 ENV PATH="/home/apps/kmc/bin:${PATH}"
 
 
