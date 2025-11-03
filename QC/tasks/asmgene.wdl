@@ -58,6 +58,8 @@ task asmgene {
         File? referenceFasta
         File? genesToReferencePaf
         Float asmgene_identity = 0.97
+        Boolean outputRefPaf = false
+        Boolean outputAsmPaf = false
         # runtime configurations
         Int threadCount = 32
         Int memSizeGB = 64
@@ -104,6 +106,23 @@ task asmgene {
 
         # Output the stats for each gene to a file 
         paftools.js asmgene -i~{asmgene_identity} -e -a genesToRef.paf $PREFIX.paf > $PREFIX.~{asmgene_identity}.per_gene_stats.txt
+
+        # determine if ref alignment is output
+        if [ ~{outputRefPaf} == true ]
+        then
+            # ref name prep
+            REFFILENAME=$(basename -- "~{referenceFasta}" | sed 's/.gz$//' )
+            REFPREFIX="${REFFILENAME%.*}"
+
+            mv genesToRef.paf $REFPREFIX_refgenes.paf
+        fi
+
+        # determine if asm alignment is output
+        if [ ~{outputAsmPaf} == true ]
+        then
+            mv $PREFIX.paf $PREFIX_asmgenes.paf
+        fi
+
     >>>
 
     runtime {
@@ -117,6 +136,8 @@ task asmgene {
     output {
         File geneStats = glob("*.gene_stats.txt")[0]
         File perGeneStats = glob("*.per_gene_stats.txt")[0]
+        File? refPaf = glob("*_refgenes.paf")[0]
+        File? asmPaf = glob("*_asmgenes.paf")[0]
     }
 }
 
