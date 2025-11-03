@@ -40,11 +40,15 @@ workflow runAsmgene {
 
     File asmgeneGeneStatsAsm = select_first([asmgeneAsm.geneStats,asmgeneAsmUnp.geneStats] )
     File asmgeneGPStatsAsm = select_first([asmgeneAsm.perGeneStats,asmgeneAsmUnp.perGeneStats])
+    File? asmgeneRefPaf = select_first([asmgeneAsm.refPaf,asmgeneAsmUnp.refPaf])
+    File? asmgeneAsmPaf = select_first([asmgeneAsm.asmPaf,asmgeneAsmUnp.asmPaf])
 
 
     output {
         File geneStats = asmgeneGeneStatsAsm
         File perGeneStats = asmgeneGPStatsAsm
+        File? refGenePaf = asmgeneRefPaf
+        File? asmGenePaf = asmgeneAsmPaf
     }
 
 
