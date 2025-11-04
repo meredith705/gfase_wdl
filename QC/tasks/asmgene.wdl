@@ -58,6 +58,7 @@ task asmgene {
     input{
         File assemblyFasta
         File genesFasta
+        String sample
         File? unphasedFasta
         File? referenceFasta
         File? genesToReferencePaf
@@ -70,6 +71,9 @@ task asmgene {
         Int diskSizeGB = 32
         String dockerImage = "tpesout/hpp_minimap2:latest"
     }
+
+    String ref_name = sub(sub(basename(assemblyFasta), '\\.gz$', ''), '\\.fa$', '')
+
     command <<<
         # Set the exit code of a pipeline to that of the rightmost command
         # to exit with a non-zero status, or zero if all commands of the pipeline exit
@@ -112,19 +116,19 @@ task asmgene {
         paftools.js asmgene -i~{asmgene_identity} -e -a genesToRef.paf $PREFIX.paf > $PREFIX.~{asmgene_identity}.per_gene_stats.txt
 
         # determine if ref alignment is output
-        if [ ~{outputRefPaf} == true ]
+        if [[ "~{outputRefPaf}" == "true" ]]
         then
             # ref name prep
             REFFILENAME=$(basename -- "~{referenceFasta}" | sed 's/.gz$//' )
             REFPREFIX="${REFFILENAME%.*}"
 
-            mv genesToRef.paf $REFPREFIX_refgenes.paf
+            mv genesToRef.paf "~{ref_name}_genes.paf"
         fi
 
         # determine if asm alignment is output
-        if [ ~{outputAsmPaf} == true ]
+        if [[ "~{outputAsmPaf}" == "true" ]]
         then
-            mv $PREFIX.paf $PREFIX_asmgenes.paf
+            mv "${PREFIX}.paf "~{sample}_asmgenes.paf"
         fi
 
     >>>
@@ -140,8 +144,8 @@ task asmgene {
     output {
         File geneStats = glob("*.gene_stats.txt")[0]
         File perGeneStats = glob("*.per_gene_stats.txt")[0]
-        File? refPaf = glob("*_refgenes.paf")[0]
-        File? asmPaf = glob("*_asmgenes.paf")[0]
+        File? refPaf = "~{ref_name}_genes.paf"
+        File? asmPaf = "~{sample}_asmgenes.paf" 
     }
 }
 
