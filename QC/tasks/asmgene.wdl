@@ -147,8 +147,8 @@ task asmgene {
     output {
         File geneStats = glob("*.gene_stats.txt")[0]
         File perGeneStats = glob("*.per_gene_stats.txt")[0]
-        File? refPaf = "~{ref_name}_genes.paf"
-        File? asmPaf = "~{sample}_asmgenes.paf" 
+        File? refPaf = ref_name + "_genes.paf"
+        File? asmPaf = sample + "_asmgenes.paf" 
     }
 }
 
