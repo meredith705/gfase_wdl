@@ -43,15 +43,15 @@ workflow runAsmgene {
 
     File asmgeneGeneStatsAsm = select_first([asmgeneAsm.geneStats,asmgeneAsmUnp.geneStats] )
     File asmgeneGPStatsAsm = select_first([asmgeneAsm.perGeneStats,asmgeneAsmUnp.perGeneStats])
-    File? asmgeneRefPaf = select_first([asmgeneAsm.refPaf,asmgeneAsmUnp.refPaf])
-    File? asmgeneAsmPaf = select_first([asmgeneAsm.asmPaf,asmgeneAsmUnp.asmPaf])
 
 
     output {
         File geneStats = asmgeneGeneStatsAsm
         File perGeneStats = asmgeneGPStatsAsm
-        File? refGenePaf = asmgeneRefPaf
-        File? asmGenePaf = asmgeneAsmPaf
+        File? refGenePaf = asmgeneAsm.refPaf
+        File? refGenePafup = asmgeneAsmUnp.refPaf
+        File? asmGenePaf = asmgeneAsm.asmPaf
+        File? asmGenePafup = asmgeneAsmUnp.asmPaf
     }
 
 
@@ -62,6 +62,7 @@ task asmgene {
         File assemblyFasta
         File genesFasta
         String sample
+        String ref_name = "CHM13"
         File? unphasedFasta
         File? referenceFasta
         File? genesToReferencePaf
@@ -75,7 +76,6 @@ task asmgene {
         String dockerImage = "tpesout/hpp_minimap2:latest"
     }
 
-    String ref_name = sub(sub(basename(assemblyFasta), '\\.gz$', ''), '\\.fa$', '')
 
     command <<<
         # Set the exit code of a pipeline to that of the rightmost command
