@@ -4,6 +4,7 @@ workflow runAsmgene {
 	input{
         File assemblyFa
         File genesFa
+        String sample
         File? unphasedFa
         File? referenceFa
         File? genesToReferencePaf
@@ -18,6 +19,7 @@ workflow runAsmgene {
     if (defined(unphasedFa)){
         call asmgene as asmgeneAsmUnp {
             input:
+                sample=sample,
                 assemblyFasta=assemblyFa,
                 unphasedFasta=unphasedFa,
                 genesFasta=genesFa,
@@ -30,6 +32,7 @@ workflow runAsmgene {
     if (!defined(unphasedFa)){
         call asmgene as asmgeneAsm {
             input:
+                sample=sample,
                 assemblyFasta=assemblyFa,
                 genesFasta=genesFa,
                 genesToReferencePaf=genesToReferencePaf,
