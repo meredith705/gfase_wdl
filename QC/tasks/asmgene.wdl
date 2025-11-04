@@ -131,7 +131,7 @@ task asmgene {
         # determine if asm alignment is output
         if [[ "~{outputAsmPaf}" == "true" ]]
         then
-            mv "${PREFIX}.paf "~{sample}_asmgenes.paf"
+            mv "${PREFIX}.paf" "~{sample}_asmgenes.paf"
         fi
 
     >>>
